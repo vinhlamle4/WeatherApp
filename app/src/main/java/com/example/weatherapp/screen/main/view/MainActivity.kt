@@ -4,23 +4,30 @@ import android.content.Context
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.example.weatherapp.R
 import com.example.weatherapp.base.BaseActivity
+import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.model.location.Location
 import com.example.weatherapp.screen.main.viewmodel.MainViewModel
+import com.example.weatherapp.service.WeatherRepository
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity: BaseActivity()  {
+class MainActivity : BaseActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
     private lateinit var location: Location
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         setupData()
         setupViewObserver()
@@ -28,19 +35,20 @@ class MainActivity: BaseActivity()  {
     }
 
     private fun setupData() {
-        mainViewModel.setupRetrofit()
+        mainViewModel.service = WeatherRepository()
     }
 
     private fun setupViewObserver() {
         mainViewModel.location.observe(this, Observer {
             location = it[0]
             if (!location.Key.isBlank()) {
-                mainViewModel.getForecast(location.Key)
+                mainViewModel.getCondition(location.Key)
             }
         })
-        
-        mainViewModel.forecast.observe(this, Observer {
 
+        mainViewModel.condition.observe(this, Observer {
+            binding.condition = it
+            setImageIcon(it.weatherIcon)
         })
     }
 
@@ -58,6 +66,12 @@ class MainActivity: BaseActivity()  {
             }
             handler
         }
+    }
+
+    private fun setImageIcon(weatherIcon: Int) {
+        val iconName = "icon_$weatherIcon"
+        val res = resources.getIdentifier("drawable/$iconName", null, packageName)
+        img_weather.setImageResource(res)
     }
 }
 

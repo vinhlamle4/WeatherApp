@@ -10,10 +10,12 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.forecast
 
+import com.google.gson.annotations.SerializedName
+
 
 data class Direction (
 
-	val degrees : Int,
-	val localized : String,
-	val english : String
+	@SerializedName("Degrees") val degrees : Int,
+	@SerializedName("Localized") val localized : String,
+	@SerializedName("English") val english : String
 )

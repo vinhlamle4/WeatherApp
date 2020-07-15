@@ -10,22 +10,24 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.forecast
 
+import com.google.gson.annotations.SerializedName
+
 
 data class DailyForecasts (
 
-	val date : String,
-	val epochDate : Int,
-	val sun : Sun,
-	val moon : Moon,
-	val temperature : Temperature,
-	val realFeelTemperature : RealFeelTemperature,
-	val realFeelTemperatureShade : RealFeelTemperatureShade,
-	val hoursOfSun : Int,
-	val degreeDaySummary : DegreeDaySummary,
-	val airAndPollen : List<AirAndPollen>,
-	val day : Day,
-	val night : Night,
-	val sources : List<String>,
-	val mobileLink : String,
-	val link : String
+	@SerializedName("Date") val date : String,
+	@SerializedName("EpochDate") val epochDate : Int,
+	@SerializedName("Sun") val sun : Sun,
+	@SerializedName("Moon") val moon : Moon,
+	@SerializedName("Temperature") val temperature : Temperature,
+	@SerializedName("RealFeelTemperature") val realFeelTemperature : RealFeelTemperature,
+	@SerializedName("RealFeelTemperatureShade") val realFeelTemperatureShade : RealFeelTemperatureShade,
+	@SerializedName("HoursOfSun") val hoursOfSun : Double,
+	@SerializedName("DegreeDaySummary") val degreeDaySummary : DegreeDaySummary,
+	@SerializedName("AirAndPollen") val airAndPollen : List<AirAndPollen>,
+	@SerializedName("Day") val day : Day,
+	@SerializedName("Night") val night : Night,
+	@SerializedName("Sources") val sources : List<String>,
+	@SerializedName("MobileLink") val mobileLink : String,
+	@SerializedName("Link") val link : String
 )

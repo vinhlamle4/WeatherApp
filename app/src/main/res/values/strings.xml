@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">WeatherApp</string>
     <string name="lbl_city_name">City Name</string>
+
+
+    <string name="temp_unit">%s°C</string>
+    <string name="day">Day</string>
 </resources>

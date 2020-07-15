@@ -10,11 +10,13 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.forecast
 
+import com.google.gson.annotations.SerializedName
+
 
 data class Sun (
 
-	val rise : String,
-	val epochRise : Int,
-	val set : String,
-	val epochSet : Int
+	@SerializedName("Rise") val rise : String,
+	@SerializedName("EpochRise") val epochRise : Int,
+	@SerializedName("Set") val set : String,
+	@SerializedName("EpochSet") val epochSet : Int
 )

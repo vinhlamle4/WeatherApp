@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -21,15 +22,21 @@ android {
             applicationIdSuffix ".debug"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            buildConfigField("String", "API_KEY", "\"0VPjz5eiudCfiR7AwIH4EH319DrgNH6g\"")
+            buildConfigField("String", "API_KEY1", "\"0VPjz5eiudCfiR7AwIH4EH319DrgNH6g\"")
+            buildConfigField("String", "API_KEY", "\"btcywquqHc98EWMf8X7Nl5ApZ1G94VGX\"")
             buildConfigField("String", "API_URL", "\"http://dataservice.accuweather.com/\"")
         }
 
         debug {
             debuggable true
-            buildConfigField("String", "API_KEY", "\"0VPjz5eiudCfiR7AwIH4EH319DrgNH6g\"")
+            buildConfigField("String", "API_KEY1", "\"0VPjz5eiudCfiR7AwIH4EH319DrgNH6g\"")
+            buildConfigField("String", "API_KEY", "\"btcywquqHc98EWMf8X7Nl5ApZ1G94VGX\"")
             buildConfigField("String", "API_URL", "\"http://dataservice.accuweather.com/\"")
         }
+    }
+
+    buildFeatures {
+        dataBinding true
     }
 
     kotlinOptions {

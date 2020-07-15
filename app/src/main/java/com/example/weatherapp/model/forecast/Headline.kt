@@ -10,16 +10,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.forecast
 
+import com.google.gson.annotations.SerializedName
+
 
 data class Headline (
 
-	val effectiveDate : String,
-	val effectiveEpochDate : Int,
-	val severity : Int,
-	val text : String,
-	val category : String,
-	val endDate : String,
-	val endEpochDate : Int,
-	val mobileLink : String,
-	val link : String
+	@SerializedName("EffectiveDate") val effectiveDate : String,
+	@SerializedName("EffectiveEpochDate") val effectiveEpochDate : Int,
+	@SerializedName("Severity") val severity : Int,
+	@SerializedName("Text") val text : String,
+	@SerializedName("Category") val category : String,
+	@SerializedName("EndDate") val endDate : String,
+	@SerializedName("EndEpochDate") val endEpochDate : Int,
+	@SerializedName("MobileLink") val mobileLink : String,
+	@SerializedName("Link") val link : String
 )

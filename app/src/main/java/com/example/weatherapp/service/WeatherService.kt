@@ -1,5 +1,6 @@
-package com.example.weatherapp.request
+package com.example.weatherapp.service
 
+import com.example.weatherapp.model.condition.Condition
 import com.example.weatherapp.model.forecast.Forecast
 import com.example.weatherapp.model.location.Location
 import retrofit2.Call
@@ -17,6 +18,9 @@ interface WeatherService {
     @GET("forecasts/v1/daily/1day/{locationKey}")
     fun getForecast(
         @Path("locationKey") locationKey: String, @Query("apikey") apiKey: String,
-        @Query("details") details: Boolean, @Query("metric") metric: Boolean
+        @Query("metric") metric: Boolean
     ): Call<Forecast>
+
+    @GET("currentconditions/v1/{locationKey}")
+    fun getCondition(@Path("locationKey") locationKey: String, @Query("apikey") apiKey: String): Call<List<Condition>>
 }

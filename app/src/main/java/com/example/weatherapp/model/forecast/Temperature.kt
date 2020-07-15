@@ -10,9 +10,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.forecast
 
+import com.google.gson.annotations.SerializedName
+
 
 data class Temperature (
 
-	val minimum : Minimum,
-	val maximum : Maximum
+	@SerializedName("Minimum") val minimum : Minimum,
+	@SerializedName("Maximum") val maximum : Maximum
 )
