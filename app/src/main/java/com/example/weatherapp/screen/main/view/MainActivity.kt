@@ -57,6 +57,11 @@ class MainActivity : BaseActivity() {
             setImageWeatherIcon(it.weatherIcon)
             frame_progress.visibility = View.GONE
         })
+
+        mainViewModel.requestFail.observe(this, Observer {
+            frame_progress.visibility = View.GONE
+            showSnackBar(frame_main, it)
+        })
     }
 
     private fun setupViewsAction() {

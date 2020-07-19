@@ -21,6 +21,9 @@ import retrofit2.Response
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     lateinit var service: WeatherRepository
 
+    private val _requestFail = MutableLiveData<String>()
+    val requestFail: LiveData<String> get() = _requestFail
+
     private val _location = MutableLiveData<List<Location>>()
     val location: LiveData<List<Location>> get() = _location
 
@@ -45,7 +48,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     call: Call<List<Location>>, t: Throwable
                 ) {
                     // Request Fail
-                    Log.e("Response Error --->", "${t.message}")
+                    _requestFail.postValue(t.message)
                 }
 
                 override fun onResponse(
@@ -55,12 +58,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     if (response.code() == SUCCESS_CODE) {
                         val locationResponse = response.body()
 
+                        if (locationResponse?.size == 0) {
+                            _requestFail.postValue("City name not found, please try another city")
+                        }
+
                         val locationList = ArrayList<Location>()
                         locationResponse?.forEach {
                             locationList.add(it)
                             Log.i("Response Success --->", "$it")
+                            _location.postValue(locationList.toList())
                         }
-                        _location.postValue(locationList.toList())
+
                     }
                 }
             })
@@ -79,7 +87,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
             call.enqueue(object : Callback<Forecast> {
                 override fun onFailure(call: Call<Forecast>, t: Throwable) {
-                    Log.e("Response Error --->", "${t.message}")
+                    _requestFail.postValue(t.message)
                 }
 
                 override fun onResponse(call: Call<Forecast>, response: Response<Forecast>) {
@@ -106,7 +114,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
             call.enqueue(object: Callback<List<Condition>> {
                 override fun onFailure(call: Call<List<Condition>>, t: Throwable) {
-                    Log.e("Response Error --->", "${t.message}")
+                    _requestFail.postValue(t.message)
                 }
 
                 override fun onResponse(
