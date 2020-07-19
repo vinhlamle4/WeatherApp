@@ -10,9 +10,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.location
 
+import com.google.gson.annotations.SerializedName
+
 data class ParentCity (
 
-	val Key : Int,
-	val localizedName : String,
-	val englishName : String
+	@SerializedName("Key") val Key : Int,
+	@SerializedName("LocalizedName") val localizedName : String,
+	@SerializedName("EnglishName") val englishName : String
 )

@@ -10,11 +10,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.location
 
-import com.example.weatherapp.model.location.Elevation
+import com.google.gson.annotations.SerializedName
 
 data class GeoPosition (
 
-	val latitude : Double,
-	val longitude : Double,
-	val elevation : Elevation
+	@SerializedName("Latitude") val latitude : Double,
+	@SerializedName("Longitude") val longitude : Double,
+	@SerializedName("Elevation") val elevation : Elevation
 )

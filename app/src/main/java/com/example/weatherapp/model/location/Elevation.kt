@@ -10,8 +10,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.location
 
+import com.google.gson.annotations.SerializedName
+
 data class Elevation (
 
-    val metric : Metric,
-    val imperial : Imperial
+	@SerializedName("Metric") val metric : Metric,
+	@SerializedName("Imperial") val imperial : Imperial
 )

@@ -10,9 +10,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.location
 
+import com.google.gson.annotations.SerializedName
+
 data class Imperial (
 
-	val value : Int,
-	val unit : String,
-	val unitType : Int
+	@SerializedName("Value") val value : Int,
+	@SerializedName("Unit") val unit : String,
+	@SerializedName("UnitType") val unitType : Int
 )

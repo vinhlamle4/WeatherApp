@@ -1,7 +1,10 @@
 package com.example.weatherapp.screen.main.view
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -21,6 +24,7 @@ class MainActivity : BaseActivity() {
     private val mainViewModel: MainViewModel by viewModels()
     private lateinit var location: Location
     private lateinit var binding: ActivityMainBinding
+    private var isEdtCityNameShow = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +45,9 @@ class MainActivity : BaseActivity() {
         mainViewModel.location.observe(this, Observer {
             location = it[0]
             if (!location.Key.isBlank()) {
+                runOnUiThread {
+                    tv_city_name.text = location.englishName
+                }
                 mainViewModel.getCondition(location.Key)
             }
         })
@@ -53,23 +60,31 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupViewsAction() {
-//        edt_city_name.setOnEditorActionListener { v, actionId, _ ->
-//            var handler = false
-//            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-//                mainViewModel.getLocation(v.text.toString())
-//                // clear focus and close keyboard
-//                v.clearFocus()
-//                val imm: InputMethodManager =
-//                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//                imm.hideSoftInputFromWindow(v.windowToken, 0)
-//                handler = true
-//            }
-//            handler
+//        img_location_search.setOnClickListener {
+//
+////            tv_city_name.visibility = View.INVISIBLE
+////            card_city_name.visibility = View.VISIBLE
+////            isEdtCityNameShow = true
+//
+//            //frame_progress.visibility = View.VISIBLE
+//            //showToast("City Search")
+//            //mainViewModel.getCondition("4-353981_1_AL")
 //        }
-        img_location_search.setOnClickListener {
-            frame_progress.visibility = View.VISIBLE
-            showToast("City Search")
-            mainViewModel.getCondition("4-353981_1_AL")
+
+        edt_city_name.setOnEditorActionListener { v, actionId, _ ->
+            var handler = false
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                frame_progress.visibility = View.VISIBLE
+                mainViewModel.getLocation(v.text.toString())
+                // clear focus and close keyboard
+                v.text = ""
+                v.clearFocus()
+                val imm: InputMethodManager =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
+                handler = true
+            }
+            handler
         }
     }
 
