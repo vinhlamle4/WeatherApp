@@ -12,12 +12,9 @@ package com.example.weatherapp.model.condition
 
 import com.google.gson.annotations.SerializedName
 
-data class Temperature (
+
+data class ApparentTemperature (
 
 	@SerializedName("Metric") val metric : Metric,
 	@SerializedName("Imperial") val imperial : Imperial
-) {
-	fun getTemperature(): String {
-		return metric.value.toString() + "°C"
-	}
-}
+)

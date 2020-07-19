@@ -5,4 +5,11 @@
 
     <string name="temp_unit">%s°C</string>
     <string name="day">Day</string>
+    <string name="lbl_feels_like">Feels like</string>
+    <string name="lbl_wind">Wind</string>
+    <string name="lbl_humidity">Humidity</string>
+    <string name="lbl_pressure">Pressure</string>
+    <string name="lbl_visibility">Visibility</string>
+    <string name="dew_point">Dew point</string>
+    <string name="lbl_details">Details</string>
 </resources>

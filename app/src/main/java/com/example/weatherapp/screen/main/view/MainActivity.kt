@@ -1,12 +1,8 @@
 package com.example.weatherapp.screen.main.view
 
-import android.content.Context
 import android.os.Bundle
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
+import android.view.View
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.example.weatherapp.R
@@ -16,6 +12,8 @@ import com.example.weatherapp.model.location.Location
 import com.example.weatherapp.screen.main.viewmodel.MainViewModel
 import com.example.weatherapp.service.WeatherRepository
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.card_condition.view.*
+import kotlinx.android.synthetic.main.progress_bar.*
 
 
 class MainActivity : BaseActivity() {
@@ -32,6 +30,7 @@ class MainActivity : BaseActivity() {
         setupData()
         setupViewObserver()
         setupViewsAction()
+        setDetailsViews()
     }
 
     private fun setupData() {
@@ -48,30 +47,57 @@ class MainActivity : BaseActivity() {
 
         mainViewModel.condition.observe(this, Observer {
             binding.condition = it
-            setImageIcon(it.weatherIcon)
+            setImageWeatherIcon(it.weatherIcon)
+            frame_progress.visibility = View.GONE
         })
     }
 
     private fun setupViewsAction() {
-        edt_city_name.setOnEditorActionListener { v, actionId, _ ->
-            var handler = false
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                mainViewModel.getLocation(v.text.toString())
-                // clear focus and close keyboard
-                v.clearFocus()
-                val imm: InputMethodManager =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(v.windowToken, 0)
-                handler = true
-            }
-            handler
+//        edt_city_name.setOnEditorActionListener { v, actionId, _ ->
+//            var handler = false
+//            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+//                mainViewModel.getLocation(v.text.toString())
+//                // clear focus and close keyboard
+//                v.clearFocus()
+//                val imm: InputMethodManager =
+//                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//                imm.hideSoftInputFromWindow(v.windowToken, 0)
+//                handler = true
+//            }
+//            handler
+//        }
+        img_location_search.setOnClickListener {
+            frame_progress.visibility = View.VISIBLE
+            showToast("City Search")
+            mainViewModel.getCondition("4-353981_1_AL")
         }
     }
 
-    private fun setImageIcon(weatherIcon: Int) {
+    private fun setImageWeatherIcon(weatherIcon: Int) {
         val iconName = "icon_$weatherIcon"
         val res = resources.getIdentifier("drawable/$iconName", null, packageName)
+        img_weather.setImageDrawable(null)
         img_weather.setImageResource(res)
+    }
+
+    private fun setDetailsViews() {
+        feels_like.img_icon.setImageResource(R.drawable.ic_thermometer)
+        feels_like.tv_title.text = getString(R.string.lbl_feels_like)
+
+        wind.img_icon.setImageResource(R.drawable.ic_wind)
+        wind.tv_title.text = getString(R.string.lbl_wind)
+
+        humidity.img_icon.setImageResource(R.drawable.ic_humidity)
+        humidity.tv_title.text = getString(R.string.lbl_humidity)
+
+        pressure.img_icon.setImageResource(R.drawable.ic_pressure)
+        pressure.tv_title.text = getString(R.string.lbl_pressure)
+
+        visibility.img_icon.setImageResource(R.drawable.ic_eye)
+        visibility.tv_title.text = getString(R.string.lbl_visibility)
+
+        dew_point.img_icon.setImageResource(R.drawable.ic_dew_point)
+        dew_point.tv_title.text = getString(R.string.dew_point)
     }
 }
 

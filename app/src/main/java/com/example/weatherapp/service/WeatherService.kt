@@ -22,5 +22,5 @@ interface WeatherService {
     ): Call<Forecast>
 
     @GET("currentconditions/v1/{locationKey}")
-    fun getCondition(@Path("locationKey") locationKey: String, @Query("apikey") apiKey: String): Call<List<Condition>>
+    fun getCondition(@Path("locationKey") locationKey: String, @Query("apikey") apiKey: String, @Query("details") details: Boolean): Call<List<Condition>>
 }

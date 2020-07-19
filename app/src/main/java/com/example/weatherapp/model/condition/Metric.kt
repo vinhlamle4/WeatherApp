@@ -17,4 +17,11 @@ data class Metric (
 	@SerializedName("Value") val value : Double,
 	@SerializedName("Unit") val unit : String,
 	@SerializedName("UnitType") val unitType : Int
-)
+) {
+	fun getStringValue(): String {
+		if (unit == "C") {
+			return "$value°C"
+		}
+		return value.toString() + unit
+	}
+}

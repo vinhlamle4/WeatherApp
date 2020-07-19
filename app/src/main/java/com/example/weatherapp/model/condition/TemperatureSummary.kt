@@ -12,12 +12,9 @@ package com.example.weatherapp.model.condition
 
 import com.google.gson.annotations.SerializedName
 
-data class Temperature (
+data class TemperatureSummary (
 
-	@SerializedName("Metric") val metric : Metric,
-	@SerializedName("Imperial") val imperial : Imperial
-) {
-	fun getTemperature(): String {
-		return metric.value.toString() + "°C"
-	}
-}
+	@SerializedName("Past6HourRange") val past6HourRange : Past6HourRange,
+	@SerializedName("Past12HourRange") val past12HourRange : Past12HourRange,
+	@SerializedName("Past24HourRange") val past24HourRange : Past24HourRange
+)

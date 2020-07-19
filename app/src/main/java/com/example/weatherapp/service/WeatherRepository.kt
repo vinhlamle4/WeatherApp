@@ -21,6 +21,6 @@ class WeatherRepository {
     }
 
     fun getCondition(locationKey: String): Call<List<Condition>>  {
-        return weatherApi.getCondition(locationKey, BuildConfig.API_KEY)
+        return weatherApi.getCondition(locationKey, BuildConfig.API_KEY, true)
     }
 }
