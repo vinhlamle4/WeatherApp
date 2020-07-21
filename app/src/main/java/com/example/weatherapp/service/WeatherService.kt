@@ -15,7 +15,7 @@ interface WeatherService {
         @Query("q") location: String
     ): Call<List<Location>>
 
-    @GET("forecasts/v1/daily/1day/{locationKey}")
+    @GET("forecasts/v1/daily/5day/{locationKey}")
     fun getForecast(
         @Path("locationKey") locationKey: String, @Query("apikey") apiKey: String,
         @Query("metric") metric: Boolean

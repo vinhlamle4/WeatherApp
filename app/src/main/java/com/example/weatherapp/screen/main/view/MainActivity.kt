@@ -8,10 +8,12 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.R
 import com.example.weatherapp.base.BaseActivity
 import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.model.location.Location
+import com.example.weatherapp.screen.main.adapter.ForecastAdapter
 import com.example.weatherapp.screen.main.viewmodel.MainViewModel
 import com.example.weatherapp.service.WeatherRepository
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,7 +26,7 @@ class MainActivity : BaseActivity() {
     private val mainViewModel: MainViewModel by viewModels()
     private lateinit var location: Location
     private lateinit var binding: ActivityMainBinding
-    private var isEdtCityNameShow = false
+    private lateinit var forecastAdapter: ForecastAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +34,7 @@ class MainActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         setupData()
+        setupRecycler()
         setupViewObserver()
         setupViewsAction()
         setDetailsViews()
@@ -39,6 +42,15 @@ class MainActivity : BaseActivity() {
 
     private fun setupData() {
         mainViewModel.service = WeatherRepository()
+        forecastAdapter = ForecastAdapter()
+    }
+
+    private fun setupRecycler() {
+        recycler_forecast.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL ,false)
+            adapter = forecastAdapter
+        }
     }
 
     private fun setupViewObserver() {
@@ -56,6 +68,10 @@ class MainActivity : BaseActivity() {
             binding.condition = it
             setImageWeatherIcon(it.weatherIcon)
             frame_progress.visibility = View.GONE
+        })
+
+        mainViewModel.forecast.observe(this, Observer {
+            forecastAdapter.setNewList(it.dailyForecasts)
         })
 
         mainViewModel.requestFail.observe(this, Observer {
@@ -79,14 +95,17 @@ class MainActivity : BaseActivity() {
         edt_city_name.setOnEditorActionListener { v, actionId, _ ->
             var handler = false
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                frame_progress.visibility = View.VISIBLE
-                mainViewModel.getLocation(v.text.toString())
-                // clear focus and close keyboard
-                v.text = ""
-                v.clearFocus()
-                val imm: InputMethodManager =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(v.windowToken, 0)
+//                frame_progress.visibility = View.VISIBLE
+//                mainViewModel.getLocation(v.text.toString())
+//                // clear focus and close keyboard
+//                v.text = ""
+//                v.clearFocus()
+//                val imm: InputMethodManager =
+//                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//                imm.hideSoftInputFromWindow(v.windowToken, 0)
+
+                mainViewModel.getForecast("4-353981_1_AL")
+
                 handler = true
             }
             handler
