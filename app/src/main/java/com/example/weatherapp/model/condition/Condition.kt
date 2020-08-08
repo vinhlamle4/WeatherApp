@@ -10,52 +10,79 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.condition
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.*
 
-data class Condition (
+@Entity(tableName = "condition_table")
+data class Condition(
 
-	@SerializedName("LocalObservationDateTime") val localObservationDateTime : String,
-	@SerializedName("EpochTime") val epochTime : Int,
-	@SerializedName("WeatherText") val weatherText : String,
-	@SerializedName("WeatherIcon") val weatherIcon : Int,
-	@SerializedName("HasPrecipitation") val hasPrecipitation : Boolean,
-	@SerializedName("PrecipitationType") val precipitationType : String,
-	@SerializedName("IsDayTime") val isDayTime : Boolean,
-	@SerializedName("Temperature") val temperature : Temperature,
-	@SerializedName("RealFeelTemperature") val realFeelTemperature : RealFeelTemperature,
-	@SerializedName("RealFeelTemperatureShade") val realFeelTemperatureShade : RealFeelTemperatureShade,
-	@SerializedName("RelativeHumidity") val relativeHumidity : Int,
-	@SerializedName("IndoorRelativeHumidity") val indoorRelativeHumidity : Int,
-	@SerializedName("DewPoint") val dewPoint : DewPoint,
-	@SerializedName("Wind") val wind : Wind,
-	@SerializedName("WindGust") val windGust : WindGust,
-	@SerializedName("UVIndex") val uVIndex : Int,
-	@SerializedName("UVIndexText") val uVIndexText : String,
-	@SerializedName("Visibility") val visibility : Visibility,
-	@SerializedName("ObstructionsToVisibility") val obstructionsToVisibility : String,
-	@SerializedName("CloudCover") val cloudCover : Int,
-	@SerializedName("Ceiling") val ceiling : Ceiling,
-	@SerializedName("Pressure") val pressure : Pressure,
-	@SerializedName("PressureTendency") val pressureTendency : PressureTendency,
-	@SerializedName("Past24HourTemperatureDeparture") val past24HourTemperatureDeparture : Past24HourTemperatureDeparture,
-	@SerializedName("ApparentTemperature") val apparentTemperature : ApparentTemperature,
-	@SerializedName("WindChillTemperature") val windChillTemperature : WindChillTemperature,
-	@SerializedName("WetBulbTemperature") val wetBulbTemperature : WetBulbTemperature,
-	@SerializedName("Precip1hr") val precip1hr : Precip1hr,
-	@SerializedName("PrecipitationSummary") val precipitationSummary : PrecipitationSummary,
-	@SerializedName("TemperatureSummary") val temperatureSummary : TemperatureSummary,
-	@SerializedName("MobileLink") val mobileLink : String,
-	@SerializedName("Link") val link : String
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+
+    @SerializedName("EpochTime")
+    val epochTime: Int,
+
+    @SerializedName("WeatherText")
+    val weatherText: String,
+
+    @SerializedName("WeatherIcon")
+    val weatherIcon: Int,
+
+    @SerializedName("Temperature")
+    @Embedded(prefix = "temperature_")
+    val temperature: Temperature,
+
+    @SerializedName("RealFeelTemperature")
+    @Embedded(prefix = "realFeelTemperature_")
+    val realFeelTemperature: RealFeelTemperature,
+
+    @SerializedName("RelativeHumidity")
+    val relativeHumidity: Int,
+
+    @SerializedName("DewPoint")
+    @Embedded(prefix = "dewPoint_")
+    val dewPoint: DewPoint,
+
+    @SerializedName("Wind")
+    @Embedded(prefix = "wind_")
+    val wind: Wind,
+
+    @SerializedName("WindGust")
+    @Embedded(prefix = "windGust_")
+    val windGust: WindGust,
+
+    @SerializedName("UVIndex")
+    val uVIndex: Int,
+
+    @SerializedName("UVIndexText")
+    val uVIndexText: String,
+
+    @SerializedName("Visibility")
+    @Embedded(prefix = "visibility_")
+    val visibility: Visibility,
+
+    @SerializedName("CloudCover")
+    val cloudCover: Int,
+
+    @SerializedName("Ceiling")
+    @Embedded(prefix = "ceiling_")
+    val ceiling: Ceiling,
+
+    @SerializedName("Pressure")
+    @Embedded(prefix = "pressure_")
+    val pressure: Pressure
 ) {
-	fun convertEpochTime(): String {
-		val time = epochTime * 1000L
-		val df = SimpleDateFormat("EEE hh:mm a", Locale.getDefault())
-		return df.format(Date(time))
-	}
+    fun convertEpochTime(): String {
+        val time = epochTime * 1000L
+        val df = SimpleDateFormat("EEE hh:mm a", Locale.getDefault())
+        return df.format(Date(time))
+    }
 
-	fun getHumidity(): String {
-		return "$relativeHumidity%"
-	}
+    fun getHumidity(): String {
+        return "$relativeHumidity%"
+    }
 }

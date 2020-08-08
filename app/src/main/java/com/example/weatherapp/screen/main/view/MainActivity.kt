@@ -6,16 +6,18 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import com.amitshekhar.DebugDB
 import com.example.weatherapp.R
 import com.example.weatherapp.base.BaseActivity
+import com.example.weatherapp.database.WeatherDatabase
 import com.example.weatherapp.databinding.ActivityMainBinding
-import com.example.weatherapp.model.location.Location
-import com.example.weatherapp.screen.main.adapter.ForecastAdapter
+import com.example.weatherapp.screen.main.adapter.DailyForecastAdapter
+import com.example.weatherapp.screen.main.adapter.HourForecastAdapter
 import com.example.weatherapp.screen.main.viewmodel.MainViewModel
-import com.example.weatherapp.service.WeatherRepository
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.card_condition.view.*
 import kotlinx.android.synthetic.main.progress_bar.*
@@ -24,13 +26,12 @@ import kotlinx.android.synthetic.main.progress_bar.*
 class MainActivity : BaseActivity() {
 
     private val mainViewModel: MainViewModel by viewModels()
-    private lateinit var location: Location
     private lateinit var binding: ActivityMainBinding
-    private lateinit var forecastAdapter: ForecastAdapter
+    private lateinit var dailyForecastAdapter: DailyForecastAdapter
+    private lateinit var hourForecastAdapter: HourForecastAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_main)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         setupData()
@@ -38,40 +39,58 @@ class MainActivity : BaseActivity() {
         setupViewObserver()
         setupViewsAction()
         setDetailsViews()
+
+        DebugDB.getAddressLog();
     }
 
     private fun setupData() {
-        mainViewModel.service = WeatherRepository()
-        forecastAdapter = ForecastAdapter()
+        //mainViewModel.service = WeatherRepository(this)
+        dailyForecastAdapter = DailyForecastAdapter()
+        hourForecastAdapter = HourForecastAdapter()
     }
 
     private fun setupRecycler() {
-        recycler_forecast.apply {
+        binding.recyclerDailyForecast.apply {
+            val dividerVertical =
+                DividerItemDecoration(this@MainActivity, DividerItemDecoration.HORIZONTAL)
+            dividerVertical.setDrawable(
+                ContextCompat.getDrawable(
+                    this@MainActivity,
+                    R.drawable.divider_view
+                )!!
+            )
+            addItemDecoration(dividerVertical)
             setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL ,false)
-            adapter = forecastAdapter
+            adapter = dailyForecastAdapter
+        }
+
+        binding.recyclerHourForecast.apply {
+            setHasFixedSize(true)
+            adapter = hourForecastAdapter
         }
     }
 
     private fun setupViewObserver() {
         mainViewModel.location.observe(this, Observer {
-            location = it[0]
-            if (!location.Key.isBlank()) {
-                runOnUiThread {
-                    tv_city_name.text = location.englishName
-                }
-                mainViewModel.getCondition(location.Key)
+            if (!it.Key.isBlank()) {
+                binding.tvCityName.text = it.englishName
+                mainViewModel.getCondition(it.Key)
+                mainViewModel.getForecast(it.Key)
+                mainViewModel.getHourForecast(it.Key)
             }
         })
 
         mainViewModel.condition.observe(this, Observer {
             binding.condition = it
-            setImageWeatherIcon(it.weatherIcon)
-            frame_progress.visibility = View.GONE
+        })
+
+        mainViewModel.hourForecast.observe(this, Observer {
+            hourForecastAdapter.setNewList(it)
         })
 
         mainViewModel.forecast.observe(this, Observer {
-            forecastAdapter.setNewList(it.dailyForecasts)
+            dailyForecastAdapter.setNewList(it.dailyForecasts)
+            frame_progress.visibility = View.GONE
         })
 
         mainViewModel.requestFail.observe(this, Observer {
@@ -81,42 +100,22 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setupViewsAction() {
-//        img_location_search.setOnClickListener {
-//
-////            tv_city_name.visibility = View.INVISIBLE
-////            card_city_name.visibility = View.VISIBLE
-////            isEdtCityNameShow = true
-//
-//            //frame_progress.visibility = View.VISIBLE
-//            //showToast("City Search")
-//            //mainViewModel.getCondition("4-353981_1_AL")
-//        }
-
         edt_city_name.setOnEditorActionListener { v, actionId, _ ->
             var handler = false
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-//                frame_progress.visibility = View.VISIBLE
-//                mainViewModel.getLocation(v.text.toString())
-//                // clear focus and close keyboard
-//                v.text = ""
-//                v.clearFocus()
-//                val imm: InputMethodManager =
-//                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//                imm.hideSoftInputFromWindow(v.windowToken, 0)
-
-                mainViewModel.getForecast("4-353981_1_AL")
-
+                frame_progress.visibility = View.VISIBLE
+                mainViewModel.getLocation(v.text.toString())
+                // clear focus and close keyboard
+                v.text = ""
+                v.clearFocus()
+                val imm: InputMethodManager =
+                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v.windowToken, 0)
                 handler = true
             }
+            //mainViewModel.getForecast("4-353981_1_AL")
             handler
         }
-    }
-
-    private fun setImageWeatherIcon(weatherIcon: Int) {
-        val iconName = "icon_$weatherIcon"
-        val res = resources.getIdentifier("drawable/$iconName", null, packageName)
-        img_weather.setImageDrawable(null)
-        img_weather.setImageResource(res)
     }
 
     private fun setDetailsViews() {
@@ -139,6 +138,3 @@ class MainActivity : BaseActivity() {
         dew_point.tv_title.text = getString(R.string.dew_point)
     }
 }
-
-
-

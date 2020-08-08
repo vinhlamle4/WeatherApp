@@ -12,4 +12,14 @@
     <string name="lbl_visibility">Visibility</string>
     <string name="dew_point">Dew point</string>
     <string name="lbl_details">Details</string>
+    <string name="lbl_daily_forecast">Next 5 Days</string>
+    <string name="lbl_n_a">N/A</string>
+    <string name="hour">Hourly</string>
+
+    <string name="un_known_host_exception">Can\'t connect to the server, please check your internet connection and try again.</string>
+    <string name="request_api_fail">Request API fail, please try again</string>
+    <string name="request_location_fail">City name not found, please try another city</string>
+    <string name="request_forecast_fail">Can\'t get forecast information, please try again</string>
+    <string name="app_bg">app_bg</string>
+    <string name="weather_icon">WeatherIcon</string>
 </resources>

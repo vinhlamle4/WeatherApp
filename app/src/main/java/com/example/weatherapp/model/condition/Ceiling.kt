@@ -10,10 +10,14 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.condition
 
+import androidx.room.Embedded
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
+@Entity
 data class Ceiling (
 
-	@SerializedName("Metric") val metric : Metric,
-	@SerializedName("Imperial") val imperial : Imperial
+	@Embedded
+	@SerializedName("Metric") val metric : Metric
+//	@SerializedName("Imperial") val imperial : Imperial
 )
