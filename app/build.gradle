@@ -75,8 +75,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
     implementation 'com.google.android.material:material:1.2.0'
 
-    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-
     //Room
     implementation "androidx.room:room-runtime:2.2.5"
     implementation "androidx.room:room-ktx:2.2.5"
