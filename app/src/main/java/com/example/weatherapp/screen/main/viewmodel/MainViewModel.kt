@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.R
 import com.example.weatherapp.common.SUCCESS_CODE
 import com.example.weatherapp.model.condition.Condition
-import com.example.weatherapp.model.daily_forecast.Forecast
+import com.example.weatherapp.model.daily_forecast.DailyForecasts
 import com.example.weatherapp.model.hour_forecast.HourForecast
 import com.example.weatherapp.model.location.Location
 import com.example.weatherapp.repo.WeatherRepository
@@ -27,12 +27,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val weatherRepository: WeatherRepository
-
-    init {
-        weatherRepository =
-            WeatherRepository(application)
-    }
+    private val weatherRepository: WeatherRepository = WeatherRepository(application)
 
     private val _requestFail = MutableLiveData<String>()
     val requestFail: LiveData<String> get() = _requestFail
@@ -46,10 +41,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _hourForecast = MutableLiveData<ArrayList<HourForecast>>()
     val hourForecast: LiveData<ArrayList<HourForecast>> get() = _hourForecast
 
-    private val _forecast = MutableLiveData<Forecast>()
-    val forecast: LiveData<Forecast> get() = _forecast
+    private val _dailyForecast = MutableLiveData<ArrayList<DailyForecasts>>()
+    val dailyForecast: LiveData<ArrayList<DailyForecasts>> get() = _dailyForecast
 
-    fun getLocation(location: String) {
+    fun getLocationAPI(location: String) {
         viewModelScope.launch {
             callLocationAPI(location)
         }
@@ -57,7 +52,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun callLocationAPI(location: String) {
         withContext(Dispatchers.IO) {
-            val call = weatherRepository.getLocation(location)
+            val call = weatherRepository.getLocationAPI(location)
 
             val locations = enqueueAPI(call).body()
             if (locations != null && locations.size > 0) {
@@ -69,7 +64,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getCondition(locationKey: String) {
+    fun getConditionAPI(locationKey: String) {
         viewModelScope.launch {
             callConditionApI(locationKey)
         }
@@ -77,7 +72,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun callConditionApI(locationKey: String) {
         withContext(Dispatchers.IO) {
-            val call = weatherRepository.getCondition(locationKey)
+            val call = weatherRepository.getConditionAPI(locationKey)
 
             val conditions = enqueueAPI(call).body()
             if (conditions != null && conditions.size > 0) {
@@ -91,7 +86,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getHourForecast(locationKey: String) {
+    fun getHourForecastAPI(locationKey: String) {
         viewModelScope.launch {
             callHourForecastAPI(locationKey)
         }
@@ -99,11 +94,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun callHourForecastAPI(locationKey: String) {
         withContext(Dispatchers.IO) {
-            val call = weatherRepository.getHourForecast(locationKey)
+            val call = weatherRepository.getHourForecastAPI(locationKey)
 
             val hourForecasts = enqueueAPI(call).body()
             if (hourForecasts != null && hourForecasts.size > 0) {
                 _hourForecast.postValue(hourForecasts)
+                weatherRepository.deleteAllHourForecast()
                 hourForecasts.forEach {
                     weatherRepository.insertHourForecast(it)
                 }
@@ -116,7 +112,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getForecast(locationKey: String) {
+    fun getForecastAPI(locationKey: String) {
         viewModelScope.launch {
             callForecastApi(locationKey)
         }
@@ -124,12 +120,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun callForecastApi(locationKey: String) {
         withContext(Dispatchers.IO) {
-            val call = weatherRepository.getForecast(locationKey, metric = true)
+            val call = weatherRepository.getForecastAPI(locationKey, metric = true)
 
             val body = enqueueAPI(call).body()
             if (body != null) {
-                val forecastInfo = Forecast(body.headline, body.dailyForecasts)
-                _forecast.postValue(forecastInfo)
+                _dailyForecast.postValue(body.dailyForecasts)
+                weatherRepository.deleteAllDailyForecast()
                 body.dailyForecasts.forEach {
                     weatherRepository.insertDailyForecast(it)
                 }
@@ -165,5 +161,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 _requestFail.postValue(message)
             }
         })
+    }
+
+    fun getLocationDb() {
+        viewModelScope.launch {
+            val location = weatherRepository.getLocation()
+            val condition = weatherRepository.getCondition()
+            val hourForecasts = weatherRepository.getHourForecast() as ArrayList<HourForecast>
+            val dailyForecasts = weatherRepository.getDailyForecast() as ArrayList<DailyForecasts>
+            if (location != null && condition != null && hourForecasts.size > 0 && dailyForecasts.size > 0) {
+                _location.postValue(location)
+                _condition.postValue(condition)
+                _hourForecast.postValue(hourForecasts)
+                _dailyForecast.postValue(dailyForecasts)
+            }
+        }
     }
 }

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import com.amitshekhar.DebugDB
 import com.example.weatherapp.R
 import com.example.weatherapp.base.BaseActivity
-import com.example.weatherapp.database.WeatherDatabase
 import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.screen.main.adapter.DailyForecastAdapter
 import com.example.weatherapp.screen.main.adapter.HourForecastAdapter
@@ -29,24 +28,29 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var dailyForecastAdapter: DailyForecastAdapter
     private lateinit var hourForecastAdapter: HourForecastAdapter
+    private var isAPISearch = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         setupData()
+        getRoomDb()
         setupRecycler()
         setupViewObserver()
         setupViewsAction()
         setDetailsViews()
 
-        DebugDB.getAddressLog();
+        DebugDB.getAddressLog()
     }
 
     private fun setupData() {
-        //mainViewModel.service = WeatherRepository(this)
         dailyForecastAdapter = DailyForecastAdapter()
         hourForecastAdapter = HourForecastAdapter()
+    }
+
+    private fun getRoomDb() {
+        mainViewModel.getLocationDb()
     }
 
     private fun setupRecycler() {
@@ -72,11 +76,12 @@ class MainActivity : BaseActivity() {
 
     private fun setupViewObserver() {
         mainViewModel.location.observe(this, Observer {
-            if (!it.Key.isBlank()) {
-                binding.tvCityName.text = it.englishName
-                mainViewModel.getCondition(it.Key)
-                mainViewModel.getForecast(it.Key)
-                mainViewModel.getHourForecast(it.Key)
+            binding.tvCityName.text = it.englishName
+            if (!it.Key.isBlank() && isAPISearch) {
+                mainViewModel.getConditionAPI(it.Key)
+                mainViewModel.getForecastAPI(it.Key)
+                mainViewModel.getHourForecastAPI(it.Key)
+                isAPISearch = false
             }
         })
 
@@ -88,8 +93,8 @@ class MainActivity : BaseActivity() {
             hourForecastAdapter.setNewList(it)
         })
 
-        mainViewModel.forecast.observe(this, Observer {
-            dailyForecastAdapter.setNewList(it.dailyForecasts)
+        mainViewModel.dailyForecast.observe(this, Observer {
+            dailyForecastAdapter.setNewList(it)
             frame_progress.visibility = View.GONE
         })
 
@@ -103,8 +108,9 @@ class MainActivity : BaseActivity() {
         edt_city_name.setOnEditorActionListener { v, actionId, _ ->
             var handler = false
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                isAPISearch = true
                 frame_progress.visibility = View.VISIBLE
-                mainViewModel.getLocation(v.text.toString())
+                mainViewModel.getLocationAPI(v.text.toString())
                 // clear focus and close keyboard
                 v.text = ""
                 v.clearFocus()

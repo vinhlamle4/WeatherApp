@@ -18,7 +18,7 @@ abstract class WeatherDatabase : RoomDatabase() {
 
     companion object {
         private var INSTANCE: WeatherDatabase? = null
-        private val DB_NAME = "weather_db"
+        private const val DB_NAME = "weather_db"
 
         //https://yellowcodebooks.com/2019/05/24/android-architecture-component-phan-4-tim-hieu-ve-room/
         fun getDatabase(context: Context): WeatherDatabase {

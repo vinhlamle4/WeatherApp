@@ -16,39 +16,60 @@ class WeatherRepository(val context: Context) {
 
     private val weatherDb = WeatherDatabase.getDatabase(context)
 
-    fun getLocation(location: String): Call<ArrayList<Location>> {
+    fun getLocationAPI(location: String): Call<ArrayList<Location>> {
         return weatherApi.getLocation(BuildConfig.API_KEY, location)
     }
 
-    fun getForecast(
+    fun getForecastAPI(
         locationKey: String,
         metric: Boolean = false
     ): Call<Forecast> {
         return weatherApi.getForecast(locationKey, BuildConfig.API_KEY, metric)
     }
 
-    fun getCondition(locationKey: String): Call<ArrayList<Condition>>  {
+    fun getConditionAPI(locationKey: String): Call<ArrayList<Condition>> {
         return weatherApi.getCondition(locationKey, BuildConfig.API_KEY, details = true)
     }
 
-    fun getHourForecast(locationKey: String): Call<ArrayList<HourForecast>> {
+    fun getHourForecastAPI(locationKey: String): Call<ArrayList<HourForecast>> {
         return weatherApi.getHourForecast(locationKey, BuildConfig.API_KEY, metric = true)
     }
 
-    suspend fun getLocation() {
-        weatherDb.weatherDAO().getLocation()
-    }
+    suspend fun getLocation(): Location? = weatherDb.weatherDAO().getLocation()
+
+
+    suspend fun getCondition(): Condition? = weatherDb.weatherDAO().getCondition()
+
+
+    suspend fun getHourForecast(): List<HourForecast> = weatherDb.weatherDAO().getHourForecast()
+
+
+    suspend fun getDailyForecast(): List<DailyForecasts> = weatherDb.weatherDAO().getDailyForecast()
 
     suspend fun insertLocation(location: Location) {
-        weatherDb.weatherDAO().insertLocation(location)
+        weatherDb.weatherDAO().apply {
+            deleteAllLocation()
+            insertLocation(location)
+        }
     }
 
     suspend fun insertCondition(condition: Condition) {
-        weatherDb.weatherDAO().insertCondition(condition)
+        weatherDb.weatherDAO().apply {
+            deleteAllCondition()
+            insertCondition(condition)
+        }
+    }
+
+    suspend fun deleteAllHourForecast() {
+        weatherDb.weatherDAO().deleteAllHourForecast()
     }
 
     suspend fun insertHourForecast(hourForecast: HourForecast) {
         weatherDb.weatherDAO().insertHourForecast(hourForecast)
+    }
+
+    suspend fun deleteAllDailyForecast() {
+        weatherDb.weatherDAO().deleteAllDailyForecast()
     }
 
     suspend fun insertDailyForecast(dailyForecasts: DailyForecasts) {

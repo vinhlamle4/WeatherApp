@@ -29,8 +29,8 @@ android {
 
         debug {
             debuggable true
-            buildConfigField("String", "API_KEY", "\"0VPjz5eiudCfiR7AwIH4EH319DrgNH6g\"")
-            buildConfigField("String", "API_KEY1", "\"btcywquqHc98EWMf8X7Nl5ApZ1G94VGX\"")
+            buildConfigField("String", "API_KEY1", "\"0VPjz5eiudCfiR7AwIH4EH319DrgNH6g\"")
+            buildConfigField("String", "API_KEY", "\"btcywquqHc98EWMf8X7Nl5ApZ1G94VGX\"")
             buildConfigField("String", "API_URL", "\"http://dataservice.accuweather.com/\"")
         }
     }
@@ -74,7 +74,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
     implementation 'com.google.android.material:material:1.2.0'
-    
+
     //Room
     implementation "androidx.room:room-runtime:2.2.5"
     implementation "androidx.room:room-ktx:2.2.5"
