@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">WeatherApp</string>
     <string name="lbl_city_name">City Name</string>
+    <string name="lbl_search">Search</string>
 
 
     <string name="temp_unit">%s°C</string>
@@ -19,6 +20,7 @@
     <string name="un_known_host_exception">Can\'t connect to the server, please check your internet connection and try again.</string>
     <string name="request_api_fail">Request API fail, please try again</string>
     <string name="request_location_fail">City name not found, please try another city</string>
+    <string name="request_condition_fail">Can\'t get Condition information, please try another city</string>
     <string name="request_forecast_fail">Can\'t get forecast information, please try again</string>
     <string name="app_bg">app_bg</string>
     <string name="weather_icon">WeatherIcon</string>

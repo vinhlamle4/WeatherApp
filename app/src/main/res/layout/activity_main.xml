@@ -6,347 +6,342 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="condition"
             type="com.example.weatherapp.model.condition.Condition" />
     </data>
 
     <FrameLayout
-        android:id="@+id/frame_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
-        <ImageView
+        <com.flaviofaria.kenburnsview.KenBurnsView
+            android:id="@+id/imv_app_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/app_bg"
-            android:scaleType="fitXY"
-            android:src="@mipmap/app_bg1" />
+            android:background="#66000000" />
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tool_bar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:context=".screen.main.view.MainActivity">
+                android:layout_height="?attr/actionBarSize"
+                android:theme="@style/WeatherToolbar"/>
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_city_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_normal"
-                    app:cardBackgroundColor="@color/card_view_bg"
-                    app:cardCornerRadius="@dimen/card_radius"
-                    app:cardElevation="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:strokeColor="@color/card_stroke_color"
-                    app:strokeWidth="@dimen/card_stroke">
+            <FrameLayout
+                android:id="@+id/frame_main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-                    <EditText
-                        android:id="@+id/edt_city_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="@dimen/margin_normal"
-                        android:background="@android:color/transparent"
-                        android:drawableStart="@drawable/ic_search"
-                        android:drawablePadding="@dimen/padding_normal"
-                        android:hint="@string/lbl_city_name"
-                        android:imeOptions="actionSearch"
-                        android:inputType="text"
-                        android:padding="@dimen/padding_small"
-                        android:textColor="@color/white"
-                        android:textColorHint="@color/white"
-                        android:autofillHints="EditTextCityName" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <TextView
-                    android:id="@+id/tv_city_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_xlarge"
-                    android:text="@string/lbl_n_a"
-                    android:textAlignment="center"
-                    android:textSize="@dimen/text_size_30"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/card_city_name"
-                    tools:text="Ho Chi Minh City" />
-
-                <TextView
-                    android:id="@+id/tv_update_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_normal"
-                    android:text="@{condition.convertEpochTime()}"
-                    android:textSize="@dimen/text_size_25"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_city_name"
-                    tools:text="T4, 11:30 pm" />
-
-                <!--region Condition-->
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraint_condition"
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/margin_normal"
-                    android:layout_marginTop="@dimen/margin_xlarge"
-                    android:layout_marginEnd="@dimen/margin_normal"
-                    android:background="@android:color/transparent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_update_time">
+                    android:layout_height="match_parent">
 
-                    <ImageView
-                        android:id="@+id/img_weather"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_normal"
-                        android:padding="@dimen/padding_small"
-                        android:scaleType="center"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_text"
-                        app:layout_constraintEnd_toStartOf="@id/tv_text"
-                        app:layout_constraintHorizontal_chainStyle="packed"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:setWeatherIcon="@{condition.weatherIcon}"
-                        tools:src="@drawable/icon_1"
-                        android:contentDescription="@string/weather_icon" />
-
-                    <TextView
-                        android:id="@+id/tv_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{condition.weatherText}"
-                        android:textSize="@dimen/text_size_25"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/img_weather"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:text="Mostly cloudy" />
-
-                    <TextView
-                        android:id="@+id/tv_temperature"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@{condition.temperature.temperature}"
-                        android:textSize="@dimen/text_size_60"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/img_weather"
-                        tools:text="27°C" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-                <!--endregion-->
-
-                <!--region Details -->
-                <TextView
-                    android:id="@+id/tv_lbl_details"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_normal"
-                    android:layout_marginTop="@dimen/margin_large"
-                    android:text="@string/lbl_details"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/constraint_condition" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/margin_large"
-                    android:layout_marginEnd="@dimen/margin_normal"
-                    android:background="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_lbl_details"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_lbl_details"
-                    app:layout_constraintTop_toTopOf="@id/tv_lbl_details" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraint_details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_large"
-                    app:layout_constraintTop_toBottomOf="@id/tv_lbl_details">
-
-                    <include
-                        android:id="@+id/feels_like"
-                        layout="@layout/card_condition"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_margin="@dimen/margin_normal"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toStartOf="@id/wind"
-                        app:layout_constraintStart_toStartOf="parent"
-                        bind:value="@{condition.realFeelTemperature.metric.stringValue}" />
-
-                    <include
-                        android:id="@+id/wind"
-                        layout="@layout/card_condition"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_margin="@dimen/margin_normal"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toStartOf="@id/humidity"
-                        app:layout_constraintStart_toEndOf="@id/feels_like"
-                        bind:value="@{condition.wind.speed.metric.stringValue}" />
-
-                    <include
-                        android:id="@+id/humidity"
-                        layout="@layout/card_condition"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_margin="@dimen/margin_normal"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/wind"
-                        bind:value="@{condition.humidity}" />
-
-                    <include
-                        android:id="@+id/pressure"
-                        layout="@layout/card_condition"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="@dimen/margin_normal"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toStartOf="@id/visibility"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/feels_like"
-                        bind:value="@{condition.pressure.metric.stringValue}" />
-
-                    <include
-                        android:id="@+id/visibility"
-                        layout="@layout/card_condition"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginStart="@dimen/margin_normal"
-                        android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toStartOf="@id/dew_point"
-                        app:layout_constraintStart_toEndOf="@id/pressure"
-                        app:layout_constraintTop_toBottomOf="@+id/wind"
-                        bind:value="@{condition.visibility.metric.stringValue}" />
-
-                    <include
-                        android:id="@+id/dew_point"
-                        layout="@layout/card_condition"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginTop="@dimen/margin_large"
-                        android:layout_marginStart="@dimen/margin_normal"
-                        android:layout_marginEnd="@dimen/margin_normal"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/visibility"
-                        app:layout_constraintTop_toBottomOf="@+id/humidity"
-                        bind:value="@{condition.dewPoint.metric.stringValue}" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-                <!--endregion-->
-
-                <TextView
-                    android:id="@+id/tv_lbl_hour_forecast"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_normal"
-                    android:layout_marginTop="@dimen/margin_large"
-                    android:text="@string/hour"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/constraint_details" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/margin_large"
-                    android:layout_marginEnd="@dimen/margin_normal"
-                    android:background="#FFF"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_lbl_hour_forecast"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_lbl_hour_forecast"
-                    app:layout_constraintTop_toTopOf="@id/tv_lbl_hour_forecast" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_hour_forecast"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_normal"
-                    android:layout_marginTop="@dimen/margin_large"
-                    android:layout_marginEnd="@dimen/margin_normal"
-                    android:layout_marginBottom="@dimen/margin_normal"
-                    app:cardBackgroundColor="@color/card_view_bg"
-                    app:cardCornerRadius="@dimen/card_radius"
-                    app:cardElevation="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_lbl_hour_forecast"
-                    app:strokeColor="@color/card_stroke_color"
-                    app:strokeWidth="@dimen/card_stroke">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_hour_forecast"
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/margin_normal"
-                        android:orientation="horizontal"
-                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                        tools:listitem="@layout/forecast_hour_item" />
-                </com.google.android.material.card.MaterialCardView>
+                        tools:context=".screen.main.view.MainActivity">
 
-                <!--region 5 Days Forecast-->
-                <TextView
-                    android:id="@+id/tv_lbl_daily_forecast"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_normal"
-                    android:layout_marginTop="@dimen/margin_large"
-                    android:text="@string/lbl_daily_forecast"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/card_hour_forecast" />
+                        <TextView
+                            android:id="@+id/tv_city_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_large"
+                            android:text="@string/lbl_n_a"
+                            android:textAlignment="center"
+                            android:textSize="@dimen/text_size_30"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="Ho Chi Minh City" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginStart="@dimen/margin_large"
-                    android:layout_marginEnd="@dimen/margin_normal"
-                    android:background="@color/white"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_lbl_daily_forecast"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_lbl_daily_forecast"
-                    app:layout_constraintTop_toTopOf="@id/tv_lbl_daily_forecast" />
+                        <TextView
+                            android:id="@+id/tv_update_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_normal"
+                            android:text="@{condition.convertEpochTime()}"
+                            android:textSize="@dimen/text_size_25"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_city_name"
+                            tools:text="T4, 11:30 pm" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_daily_forecast"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_normal"
-                    android:layout_marginTop="@dimen/margin_large"
-                    android:layout_marginEnd="@dimen/margin_normal"
-                    android:layout_marginBottom="@dimen/margin_large"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_lbl_daily_forecast"
-                    tools:listitem="@layout/forecast_daily_item" />
+                        <!--region Condition-->
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/constraint_condition"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginTop="@dimen/margin_xlarge"
+                            android:layout_marginEnd="@dimen/margin_normal"
+                            android:background="@android:color/transparent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_update_time">
 
-                <!--endregion-->
+                            <ImageView
+                                android:id="@+id/img_weather"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/margin_normal"
+                                android:contentDescription="@string/weather_icon"
+                                android:padding="@dimen/padding_small"
+                                android:scaleType="center"
+                                app:layout_constraintBottom_toBottomOf="@id/tv_text"
+                                app:layout_constraintEnd_toStartOf="@id/tv_text"
+                                app:layout_constraintHorizontal_chainStyle="packed"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:setWeatherIcon="@{condition.weatherIcon}"
+                                tools:src="@drawable/icon_1" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+                            <TextView
+                                android:id="@+id/tv_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{condition.weatherText}"
+                                android:textSize="@dimen/text_size_25"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/img_weather"
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="Mostly cloudy" />
 
-        <include layout="@layout/progress_bar" />
+                            <TextView
+                                android:id="@+id/tv_temperature"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@{condition.temperature.temperature}"
+                                android:textSize="@dimen/text_size_60"
+                                android:textStyle="bold"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/img_weather"
+                                tools:text="27°C" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <!--endregion-->
+
+                        <!--region Details -->
+                        <TextView
+                            android:id="@+id/tv_lbl_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginTop="@dimen/margin_large"
+                            android:text="@string/lbl_details"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/constraint_condition" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="@dimen/margin_large"
+                            android:layout_marginEnd="@dimen/margin_normal"
+                            android:background="@color/white"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_lbl_details"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/tv_lbl_details"
+                            app:layout_constraintTop_toTopOf="@id/tv_lbl_details" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/constraint_details"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_large"
+                            app:layout_constraintTop_toBottomOf="@id/tv_lbl_details">
+
+                            <include
+                                android:id="@+id/feels_like"
+                                layout="@layout/card_condition"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_margin="@dimen/margin_normal"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintEnd_toStartOf="@id/wind"
+                                app:layout_constraintStart_toStartOf="parent"
+                                bind:value="@{condition.realFeelTemperature.metric.stringValue}" />
+
+                            <include
+                                android:id="@+id/wind"
+                                layout="@layout/card_condition"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_margin="@dimen/margin_normal"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintEnd_toStartOf="@id/humidity"
+                                app:layout_constraintStart_toEndOf="@id/feels_like"
+                                bind:value="@{condition.wind.speed.metric.stringValue}" />
+
+                            <include
+                                android:id="@+id/humidity"
+                                layout="@layout/card_condition"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_margin="@dimen/margin_normal"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/wind"
+                                bind:value="@{condition.humidity}" />
+
+                            <include
+                                android:id="@+id/pressure"
+                                layout="@layout/card_condition"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_marginStart="@dimen/margin_normal"
+                                android:layout_marginTop="@dimen/margin_large"
+                                android:layout_marginEnd="@dimen/margin_normal"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintEnd_toStartOf="@id/visibility"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@id/feels_like"
+                                bind:value="@{condition.pressure.metric.stringValue}" />
+
+                            <include
+                                android:id="@+id/visibility"
+                                layout="@layout/card_condition"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_marginStart="@dimen/margin_normal"
+                                android:layout_marginTop="@dimen/margin_large"
+                                android:layout_marginEnd="@dimen/margin_normal"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintEnd_toStartOf="@id/dew_point"
+                                app:layout_constraintStart_toEndOf="@id/pressure"
+                                app:layout_constraintTop_toBottomOf="@+id/wind"
+                                bind:value="@{condition.visibility.metric.stringValue}" />
+
+                            <include
+                                android:id="@+id/dew_point"
+                                layout="@layout/card_condition"
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_marginStart="@dimen/margin_normal"
+                                android:layout_marginTop="@dimen/margin_large"
+                                android:layout_marginEnd="@dimen/margin_normal"
+                                app:layout_constraintDimensionRatio="1:1"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@id/visibility"
+                                app:layout_constraintTop_toBottomOf="@+id/humidity"
+                                bind:value="@{condition.dewPoint.metric.stringValue}" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <!--endregion-->
+
+                        <TextView
+                            android:id="@+id/tv_lbl_hour_forecast"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginTop="@dimen/margin_large"
+                            android:text="@string/hour"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/constraint_details" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="@dimen/margin_large"
+                            android:layout_marginEnd="@dimen/margin_normal"
+                            android:background="#FFF"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_lbl_hour_forecast"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/tv_lbl_hour_forecast"
+                            app:layout_constraintTop_toTopOf="@id/tv_lbl_hour_forecast" />
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/card_hour_forecast"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginTop="@dimen/margin_large"
+                            android:layout_marginEnd="@dimen/margin_normal"
+                            android:layout_marginBottom="@dimen/margin_normal"
+                            app:cardBackgroundColor="@color/card_view_bg"
+                            app:cardCornerRadius="@dimen/card_radius"
+                            app:cardElevation="0dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_lbl_hour_forecast"
+                            app:strokeColor="@color/card_stroke_color"
+                            app:strokeWidth="@dimen/card_stroke">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recycler_hour_forecast"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="@dimen/margin_normal"
+                                android:orientation="horizontal"
+                                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                                tools:listitem="@layout/forecast_hour_item" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!--region 5 Days Forecast-->
+                        <TextView
+                            android:id="@+id/tv_lbl_daily_forecast"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginTop="@dimen/margin_large"
+                            android:text="@string/lbl_daily_forecast"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/card_hour_forecast" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="@dimen/margin_large"
+                            android:layout_marginEnd="@dimen/margin_normal"
+                            android:background="@color/white"
+                            app:layout_constraintBottom_toBottomOf="@id/tv_lbl_daily_forecast"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/tv_lbl_daily_forecast"
+                            app:layout_constraintTop_toTopOf="@id/tv_lbl_daily_forecast" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_daily_forecast"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_normal"
+                            android:layout_marginTop="@dimen/margin_large"
+                            android:layout_marginEnd="@dimen/margin_normal"
+                            android:layout_marginBottom="@dimen/margin_large"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_lbl_daily_forecast"
+                            tools:listitem="@layout/forecast_daily_item" />
+
+                        <!--endregion-->
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </ScrollView>
+
+                <include
+                    android:id="@+id/include_progress"
+                    layout="@layout/progress_bar" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
     </FrameLayout>
+
+
 </layout>

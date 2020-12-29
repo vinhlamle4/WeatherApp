@@ -1,14 +1,12 @@
 package com.example.weatherapp.screen.main.view
 
-import android.content.Context
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
+import android.widget.SearchView
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.amitshekhar.DebugDB
 import com.example.weatherapp.R
@@ -17,31 +15,48 @@ import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.screen.main.adapter.DailyForecastAdapter
 import com.example.weatherapp.screen.main.adapter.HourForecastAdapter
 import com.example.weatherapp.screen.main.viewmodel.MainViewModel
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.card_condition.view.*
-import kotlinx.android.synthetic.main.progress_bar.*
 
 
 class MainActivity : BaseActivity() {
 
-    private val mainViewModel: MainViewModel by viewModels()
-    private lateinit var binding: ActivityMainBinding
     private lateinit var dailyForecastAdapter: DailyForecastAdapter
     private lateinit var hourForecastAdapter: HourForecastAdapter
-    private var isAPISearch = false
+
+    internal val mainViewModel: MainViewModel by viewModels()
+    internal var isAPISearch = false // to showing progress bar
+    internal lateinit var binding: ActivityMainBinding
+    internal lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
+        setUpToolbar()
+        setAppBackground()
         setupData()
         getRoomDb()
         setupRecycler()
         setupViewObserver()
-        setupViewsAction()
         setDetailsViews()
-
         DebugDB.getAddressLog()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menu?.let { handleToolBarMenu(it) }
+        return true
+    }
+
+    override fun onBackPressed() {
+        if (!searchView.isIconified) {
+            searchView.onActionViewCollapsed()
+            return
+        }
+        super.onBackPressed()
+    }
+
+    private fun setAppBackground() {
+        binding.includeProgress.frameProgress.visibility = View.VISIBLE
+        mainViewModel.setAppBackGround()
     }
 
     private fun setupData() {
@@ -50,34 +65,33 @@ class MainActivity : BaseActivity() {
     }
 
     private fun getRoomDb() {
-        mainViewModel.getLocationDb()
+        mainViewModel.getWeatherInformationFromLocal()
     }
 
     private fun setupRecycler() {
+        val dividerVertical =
+            DividerItemDecoration(this@MainActivity, DividerItemDecoration.HORIZONTAL)
+        dividerVertical.setDrawable(
+            ContextCompat.getDrawable(
+                this@MainActivity,
+                R.drawable.divider_view
+            )!!
+        )
+
         binding.recyclerDailyForecast.apply {
-            val dividerVertical =
-                DividerItemDecoration(this@MainActivity, DividerItemDecoration.HORIZONTAL)
-            dividerVertical.setDrawable(
-                ContextCompat.getDrawable(
-                    this@MainActivity,
-                    R.drawable.divider_view
-                )!!
-            )
             addItemDecoration(dividerVertical)
-            setHasFixedSize(true)
             adapter = dailyForecastAdapter
         }
 
         binding.recyclerHourForecast.apply {
-            setHasFixedSize(true)
             adapter = hourForecastAdapter
         }
     }
 
     private fun setupViewObserver() {
-        mainViewModel.location.observe(this, Observer {
+        mainViewModel.location.observe(this, {
             binding.tvCityName.text = it.englishName
-            if (!it.Key.isBlank() && isAPISearch) {
+            if (it.Key.isNotBlank() && isAPISearch) {
                 mainViewModel.getConditionAPI(it.Key)
                 mainViewModel.getForecastAPI(it.Key)
                 mainViewModel.getHourForecastAPI(it.Key)
@@ -85,62 +99,49 @@ class MainActivity : BaseActivity() {
             }
         })
 
-        mainViewModel.condition.observe(this, Observer {
+        mainViewModel.condition.observe(this, {
             binding.condition = it
         })
 
-        mainViewModel.hourForecast.observe(this, Observer {
-            hourForecastAdapter.setNewList(it)
+        mainViewModel.hourForecast.observe(this, {
+            hourForecastAdapter.submitList(it.toMutableList())
         })
 
-        mainViewModel.dailyForecast.observe(this, Observer {
-            dailyForecastAdapter.setNewList(it)
-            frame_progress.visibility = View.GONE
+        mainViewModel.dailyForecast.observe(this, {
+            dailyForecastAdapter.submitList(it.toMutableList())
+            binding.includeProgress.frameProgress.visibility = View.GONE
         })
 
-        mainViewModel.requestFail.observe(this, Observer {
-            frame_progress.visibility = View.GONE
-            showSnackBar(frame_main, it)
+        mainViewModel.requestFail.observe(this, {
+            binding.includeProgress.frameProgress.visibility = View.GONE
+            showSnackBar(binding.frameMain, it)
         })
-    }
 
-    private fun setupViewsAction() {
-        edt_city_name.setOnEditorActionListener { v, actionId, _ ->
-            var handler = false
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                isAPISearch = true
-                frame_progress.visibility = View.VISIBLE
-                mainViewModel.getLocationAPI(v.text.toString())
-                // clear focus and close keyboard
-                v.text = ""
-                v.clearFocus()
-                val imm: InputMethodManager =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(v.windowToken, 0)
-                handler = true
-            }
-            //mainViewModel.getForecast("4-353981_1_AL")
-            handler
-        }
+        mainViewModel.bitmap.observe(this, {
+            binding.imvAppBg.setImageBitmap(it)
+            binding.includeProgress.frameProgress.visibility = View.GONE
+        })
     }
 
     private fun setDetailsViews() {
-        feels_like.img_icon.setImageResource(R.drawable.ic_thermometer)
-        feels_like.tv_title.text = getString(R.string.lbl_feels_like)
+        binding.apply {
+            feelsLike.imgIcon.setImageResource(R.drawable.ic_thermometer)
+            feelsLike.tvTitle.text = getString(R.string.lbl_feels_like)
 
-        wind.img_icon.setImageResource(R.drawable.ic_wind)
-        wind.tv_title.text = getString(R.string.lbl_wind)
+            wind.imgIcon.setImageResource(R.drawable.ic_wind)
+            wind.tvTitle.text = getString(R.string.lbl_wind)
 
-        humidity.img_icon.setImageResource(R.drawable.ic_humidity)
-        humidity.tv_title.text = getString(R.string.lbl_humidity)
+            humidity.imgIcon.setImageResource(R.drawable.ic_humidity)
+            humidity.tvTitle.text = getString(R.string.lbl_humidity)
 
-        pressure.img_icon.setImageResource(R.drawable.ic_pressure)
-        pressure.tv_title.text = getString(R.string.lbl_pressure)
+            pressure.imgIcon.setImageResource(R.drawable.ic_pressure)
+            pressure.tvTitle.text = getString(R.string.lbl_pressure)
 
-        visibility.img_icon.setImageResource(R.drawable.ic_eye)
-        visibility.tv_title.text = getString(R.string.lbl_visibility)
+            visibility.imgIcon.setImageResource(R.drawable.ic_eye)
+            visibility.tvTitle.text = getString(R.string.lbl_visibility)
 
-        dew_point.img_icon.setImageResource(R.drawable.ic_dew_point)
-        dew_point.tv_title.text = getString(R.string.dew_point)
+            dewPoint.imgIcon.setImageResource(R.drawable.ic_dew_point)
+            dewPoint.tvTitle.text = getString(R.string.dew_point)
+        }
     }
 }
