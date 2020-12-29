@@ -1,126 +1,119 @@
 package com.example.weatherapp.screen.main.viewmodel
 
 import android.app.Application
-import android.util.Log
+import android.graphics.BitmapFactory
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.common.SUCCESS_CODE
+import com.example.weatherapp.R
 import com.example.weatherapp.model.condition.Condition
-import com.example.weatherapp.model.forecast.Forecast
+import com.example.weatherapp.model.daily_forecast.DailyForecasts
+import com.example.weatherapp.model.hour_forecast.HourForecast
 import com.example.weatherapp.model.location.Location
-import com.example.weatherapp.service.WeatherRepository
+import com.example.weatherapp.repo.WeatherRepository
+import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlin.random.Random
+
+//https://codelabs.developers.google.com/codelabs/android-room-with-a-view-kotlin/#9
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    lateinit var service: WeatherRepository
 
-    private val _location = MutableLiveData<List<Location>>()
-    val location: LiveData<List<Location>> get() = _location
+    private val weatherRepository: WeatherRepository = WeatherRepository(application)
 
-    private val _forecast = MutableLiveData<Forecast>()
-    val forecast: LiveData<Forecast> get() = _forecast
+    private val _requestFail = MutableLiveData<String>()
+    val requestFail: LiveData<String> get() = _requestFail
+
+    private val _location = MutableLiveData<Location>()
+    val location: LiveData<Location> get() = _location
 
     private val _condition = MutableLiveData<Condition>()
     val condition: LiveData<Condition> get() = _condition
 
-    fun getLocation(location: String) {
+    private val _hourForecast = MutableLiveData<ArrayList<HourForecast>>()
+    val hourForecast: LiveData<ArrayList<HourForecast>> get() = _hourForecast
+
+    private val _dailyForecast = MutableLiveData<ArrayList<DailyForecasts>>()
+    val dailyForecast: LiveData<ArrayList<DailyForecasts>> get() = _dailyForecast
+
+    private val _bitmapComposer = MutableLiveData<Blurry.BitmapComposer>()
+    val bitmapComposer: LiveData<Blurry.BitmapComposer> get() = _bitmapComposer
+
+    private var appContext: Application = getApplication<Application>()
+
+    fun getLocationAPI(location: String) {
         viewModelScope.launch {
-            callLocationAPI(location)
+            weatherRepository.fetchLocation(location,
+                onSuccess = {
+                    _location.postValue(it)
+                }, onFailed = {
+                    _requestFail.postValue(it)
+                })
         }
     }
 
-    private suspend fun callLocationAPI(location: String) {
-        withContext(Dispatchers.Default) {
-            val call = service.getLocation(location)
-
-            call.enqueue(object : Callback<List<Location>> {
-                override fun onFailure(
-                    call: Call<List<Location>>, t: Throwable
-                ) {
-                    // Request Fail
-                    Log.e("Response Error --->", "${t.message}")
-                }
-
-                override fun onResponse(
-                    call: Call<List<Location>>, response: Response<List<Location>>
-                ) {
-                    // Request Success
-                    if (response.code() == SUCCESS_CODE) {
-                        val locationResponse = response.body()
-
-                        val locationList = ArrayList<Location>()
-                        locationResponse?.forEach {
-                            locationList.add(it)
-                            Log.i("Response Success --->", "$it")
-                        }
-                        _location.postValue(locationList.toList())
-                    }
-                }
+    fun getConditionAPI(locationKey: String) {
+        viewModelScope.launch {
+            weatherRepository.fetchCondition(locationKey, onSuccess = {
+                _condition.postValue(it)
+            }, onFailed = {
+                _requestFail.postValue(it)
             })
         }
     }
 
-    fun getForecast(locationKey: String) {
+    fun getHourForecastAPI(locationKey: String) {
         viewModelScope.launch {
-            callForecastApI(locationKey)
-        }
-    }
-
-    private suspend fun callForecastApI(locationKey: String) {
-        withContext(Dispatchers.Default) {
-            val call = service.getForecast(locationKey, metric = true)
-
-            call.enqueue(object : Callback<Forecast> {
-                override fun onFailure(call: Call<Forecast>, t: Throwable) {
-                    Log.e("Response Error --->", "${t.message}")
-                }
-
-                override fun onResponse(call: Call<Forecast>, response: Response<Forecast>) {
-                    if (response.code() == SUCCESS_CODE) {
-                        response.body()?.let {
-                            val forecastInfo = Forecast(it.headline, it.dailyForecasts)
-                            _forecast.postValue(forecastInfo)
-                        }
-                    }
-                }
+            weatherRepository.fetchHourForecast(locationKey, onSuccess = {
+                _hourForecast.postValue(it)
+            }, onFailed = {
+                _requestFail.postValue(it)
             })
         }
     }
 
-    fun getCondition(locationKey: String) {
+    fun getForecastAPI(locationKey: String) {
         viewModelScope.launch {
-            callConditionApI(locationKey)
+            weatherRepository.fetchDailyForecast(locationKey, onSuccess = {
+                _dailyForecast.postValue(it)
+            }, onFailed = {
+                _requestFail.postValue(it)
+            })
         }
     }
 
-    private suspend fun callConditionApI(locationKey: String) {
-        withContext(Dispatchers.Default) {
-            val call = service.getCondition(locationKey)
+    fun getWeatherInformationFromLocal() {
+        viewModelScope.launch {
+            val location = weatherRepository.getLocationLocal()
+            val condition = weatherRepository.getConditionLocal()
+            val hourForecasts = weatherRepository.getHourForecastLocal() as ArrayList<HourForecast>
+            val dailyForecasts =
+                weatherRepository.getDailyForecastLocal() as ArrayList<DailyForecasts>
+            if (hourForecasts.size > 0 && dailyForecasts.size > 0) {
+                _location.postValue(location)
+                _condition.postValue(condition)
+                _hourForecast.postValue(hourForecasts)
+                _dailyForecast.postValue(dailyForecasts)
+            }
+        }
+    }
 
-            call.enqueue(object: Callback<List<Condition>> {
-                override fun onFailure(call: Call<List<Condition>>, t: Throwable) {
-                    Log.e("Response Error --->", "${t.message}")
-                }
+    fun setAppBackGround() {
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                val appBgs =
+                    arrayOf(R.mipmap.app_bg, R.mipmap.app_bg1, R.mipmap.app_bg2, R.mipmap.app_bg3)
 
-                override fun onResponse(
-                    call: Call<List<Condition>>,
-                    response: Response<List<Condition>>
-                ) {
-                    val condition = response.body()
-                    condition?.let {
-                        val conditionInfo = it[0]
-                        _condition.postValue(conditionInfo)
-                    }
-                }
+                val random = Random.nextInt(appBgs.size)
 
-            })
+                val bitmap = BitmapFactory.decodeResource(appContext.resources, appBgs[random])
+
+                val bitmapComposer = Blurry.with(appContext).radius(2).sampling(2).from(bitmap)
+                _bitmapComposer.postValue(bitmapComposer)
+            }
         }
     }
 }
