@@ -1,6 +1,8 @@
 package com.example.weatherapp.screen.main.view
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.SearchView
@@ -16,14 +18,14 @@ import com.example.weatherapp.screen.main.adapter.DailyForecastAdapter
 import com.example.weatherapp.screen.main.adapter.HourForecastAdapter
 import com.example.weatherapp.screen.main.viewmodel.MainViewModel
 
-
 class MainActivity : BaseActivity() {
 
     private lateinit var dailyForecastAdapter: DailyForecastAdapter
     private lateinit var hourForecastAdapter: HourForecastAdapter
 
     internal val mainViewModel: MainViewModel by viewModels()
-    internal var isAPISearch = false // to showing progress bar
+    internal var fetchDataFromAPI = false
+
     internal lateinit var binding: ActivityMainBinding
     internal lateinit var searchView: SearchView
 
@@ -55,7 +57,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun setAppBackground() {
-        binding.includeProgress.frameProgress.visibility = View.VISIBLE
+        showProgressDialog(true)
         mainViewModel.setAppBackGround()
     }
 
@@ -91,11 +93,12 @@ class MainActivity : BaseActivity() {
     private fun setupViewObserver() {
         mainViewModel.location.observe(this, {
             binding.tvCityName.text = it.englishName
-            if (it.Key.isNotBlank() && isAPISearch) {
+            //fetchDataFromAPI = true => search city from searchView fetch data and save to DB
+            if (it.Key.isNotBlank() && fetchDataFromAPI) {
                 mainViewModel.getConditionAPI(it.Key)
                 mainViewModel.getForecastAPI(it.Key)
                 mainViewModel.getHourForecastAPI(it.Key)
-                isAPISearch = false
+                fetchDataFromAPI = false
             }
         })
 
@@ -109,17 +112,19 @@ class MainActivity : BaseActivity() {
 
         mainViewModel.dailyForecast.observe(this, {
             dailyForecastAdapter.submitList(it.toMutableList())
-            binding.includeProgress.frameProgress.visibility = View.GONE
+            showProgressDialog(false)
         })
 
         mainViewModel.requestFail.observe(this, {
-            binding.includeProgress.frameProgress.visibility = View.GONE
+            showProgressDialog(false)
             showSnackBar(binding.frameMain, it)
         })
 
-        mainViewModel.bitmap.observe(this, {
-            binding.imvAppBg.setImageBitmap(it)
-            binding.includeProgress.frameProgress.visibility = View.GONE
+        mainViewModel.bitmapComposer.observe(this, {
+            binding.imvAppBg.foreground =
+                ColorDrawable(ContextCompat.getColor(this, R.color.black_40))
+            it.into(binding.imvAppBg)
+            showProgressDialog(false)
         })
     }
 
@@ -143,5 +148,13 @@ class MainActivity : BaseActivity() {
             dewPoint.imgIcon.setImageResource(R.drawable.ic_dew_point)
             dewPoint.tvTitle.text = getString(R.string.dew_point)
         }
+    }
+
+    private fun showProgressDialog(isShow: Boolean) {
+        if (isShow) {
+            binding.includeProgress.frameProgress.visibility = View.VISIBLE
+            return
+        }
+        binding.includeProgress.frameProgress.visibility = View.GONE
     }
 }

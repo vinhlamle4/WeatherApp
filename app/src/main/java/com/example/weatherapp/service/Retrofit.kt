@@ -12,8 +12,6 @@ open class Retrofit {
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
-
-
         val builder = OkHttpClient.Builder()
             .readTimeout(30, TimeUnit.SECONDS)
 

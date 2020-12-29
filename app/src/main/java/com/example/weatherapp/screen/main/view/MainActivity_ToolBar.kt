@@ -13,6 +13,7 @@ import com.example.weatherapp.R
 
 internal fun MainActivity.setUpToolbar() {
     setSupportActionBar(binding.toolBar)
+    supportActionBar?.setDisplayShowTitleEnabled(false)
 }
 
 internal fun MainActivity.handleToolBarMenu(menu: Menu) {
@@ -28,7 +29,9 @@ internal fun MainActivity.handleToolBarMenu(menu: Menu) {
                 searchView.onActionViewCollapsed()
                 return false
             }
-            onTextSubmit(text)
+            if(text.isNotBlank()) {
+                onTextSubmit(text)
+            }
             return false
         }
 
@@ -54,7 +57,7 @@ internal fun MainActivity.handleToolBarMenu(menu: Menu) {
 }
 
 private fun MainActivity.onTextSubmit(text: String) {
-    isAPISearch = true
+    fetchDataFromAPI = true
     binding.includeProgress.frameProgress.visibility = View.VISIBLE
     mainViewModel.getLocationAPI(text)
     searchView.onActionViewCollapsed()

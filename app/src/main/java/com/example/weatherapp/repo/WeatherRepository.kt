@@ -79,6 +79,7 @@ class WeatherRepository(val context: Application) : IWeatherRepository {
                 @Suppress("UNCHECKED_CAST")
                 val locations = (response as Response<ArrayList<Location>>).body()
                 if (locations != null && locations.isNotEmpty()) {
+                    //Save data to Room
                     insertLocation(locations.first())
                     onSuccess(locations.first())
                     return@withContext
@@ -103,6 +104,7 @@ class WeatherRepository(val context: Application) : IWeatherRepository {
                 @Suppress("UNCHECKED_CAST")
                 val conditions = (response as Response<ArrayList<Condition>>).body()
                 if (conditions != null && conditions.isNotEmpty()) {
+                    //Save data to Room
                     insertCondition(conditions.first())
                     onSuccess(conditions.first())
                     return@withContext
@@ -128,6 +130,7 @@ class WeatherRepository(val context: Application) : IWeatherRepository {
                 val forecasts = (response as Response<ArrayList<HourForecast>>).body()
                 if (forecasts != null && forecasts.isNotEmpty()) {
                     deleteAllHourForecast()
+                    //Save data to Room
                     forecasts.forEach {
                         insertHourForecast(it)
                     }
@@ -154,6 +157,7 @@ class WeatherRepository(val context: Application) : IWeatherRepository {
                 val forecasts = (response as Response<Forecast>).body()
                 if (forecasts != null && forecasts.dailyForecasts.isNotEmpty()) {
                     deleteAllDailyForecast()
+                    //Save data to Room
                     forecasts.dailyForecasts.forEach {
                         insertDailyForecast(it)
                     }

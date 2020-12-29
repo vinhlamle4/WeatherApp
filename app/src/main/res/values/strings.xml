@@ -3,7 +3,6 @@
     <string name="lbl_city_name">City Name</string>
     <string name="lbl_search">Search</string>
 
-
     <string name="temp_unit">%s°C</string>
     <string name="day">Day</string>
     <string name="lbl_feels_like">Feels like</string>
