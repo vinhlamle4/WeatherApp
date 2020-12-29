@@ -111,7 +111,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
                 val bitmap = BitmapFactory.decodeResource(appContext.resources, appBgs[random])
 
-                val bitmapComposer = Blurry.with(appContext).radius(4).sampling(2).from(bitmap)
+                val bitmapComposer = Blurry.with(appContext).radius(2).sampling(2).from(bitmap)
                 _bitmapComposer.postValue(bitmapComposer)
             }
         }
