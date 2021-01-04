@@ -10,11 +10,20 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.condition
 
+import androidx.room.Entity
 import com.google.gson.annotations.SerializedName
 
+@Entity
 data class Metric (
 
 	@SerializedName("Value") val value : Double,
 	@SerializedName("Unit") val unit : String,
 	@SerializedName("UnitType") val unitType : Int
-)
+) {
+	fun getStringValue(): String {
+		if (unit == "C") {
+			return "$value°C"
+		}
+		return value.toString() + unit
+	}
+}

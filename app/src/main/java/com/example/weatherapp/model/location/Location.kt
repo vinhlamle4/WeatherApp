@@ -10,22 +10,17 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 For support, please feel free to contact me at https://www.linkedin.com/in/syedabsar */
 package com.example.weatherapp.model.location
 
-data class Location (
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.google.gson.annotations.SerializedName
 
-    val version : Int,
-    val Key : String,
-    val type : String,
-    val rank : Int,
-    val localizedName : String,
-    val englishName : String,
-    val primaryPostalCode : String,
-    val region : Region,
-    val country : Country,
-    val administrativeArea : AdministrativeArea,
-    val timeZone : TimeZone,
-    val geoPosition : GeoPosition,
-    val isAlias : Boolean,
-    val parentCity : ParentCity,
-    val supplementalAdminAreas : List<String>,
-    val dataSets : List<String>
+@Entity(tableName="location_table")
+data class Location (
+	@PrimaryKey
+	@SerializedName("Key")
+	@ColumnInfo(name = "LocationKey")
+	val Key : String,
+	@SerializedName("LocalizedName") val localizedName : String,
+	@SerializedName("EnglishName") val englishName : String
 )
