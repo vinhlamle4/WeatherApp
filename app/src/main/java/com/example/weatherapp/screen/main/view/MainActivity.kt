@@ -2,7 +2,6 @@ package com.example.weatherapp.screen.main.view
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.SearchView
@@ -16,7 +15,6 @@ import com.example.weatherapp.base.BaseActivity
 import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.screen.main.adapter.DailyForecastAdapter
 import com.example.weatherapp.screen.main.adapter.HourForecastAdapter
-import com.example.weatherapp.screen.main.viewmodel.MainViewModel
 
 class MainActivity : BaseActivity() {
 
@@ -35,10 +33,7 @@ class MainActivity : BaseActivity() {
 
         setUpToolbar()
         setAppBackground()
-        setupData()
-        getRoomDb()
-        setupRecycler()
-        setupViewObserver()
+        initApp()
         setDetailsViews()
         DebugDB.getAddressLog()
     }
@@ -61,21 +56,28 @@ class MainActivity : BaseActivity() {
         mainViewModel.setAppBackGround()
     }
 
-    private fun setupData() {
+    private fun initApp() {
+        initAdapter()
+        initRoomDb()
+        initRecycler()
+        initViewObserver()
+    }
+
+    private fun initAdapter() {
         dailyForecastAdapter = DailyForecastAdapter()
         hourForecastAdapter = HourForecastAdapter()
     }
 
-    private fun getRoomDb() {
+    private fun initRoomDb() {
         mainViewModel.getWeatherInformationFromLocal()
     }
 
-    private fun setupRecycler() {
+    private fun initRecycler() {
         val dividerVertical =
-            DividerItemDecoration(this@MainActivity, DividerItemDecoration.HORIZONTAL)
+            DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL)
         dividerVertical.setDrawable(
             ContextCompat.getDrawable(
-                this@MainActivity,
+                this,
                 R.drawable.divider_view
             )!!
         )
@@ -90,64 +92,62 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun setupViewObserver() {
-        mainViewModel.location.observe(this, {
+    private fun initViewObserver() = mainViewModel.apply {
+        location.observe(this@MainActivity, {
             binding.tvCityName.text = it.englishName
             //fetchDataFromAPI = true => search city from searchView fetch data and save to DB
             if (it.Key.isNotBlank() && fetchDataFromAPI) {
-                mainViewModel.getConditionAPI(it.Key)
-                mainViewModel.getForecastAPI(it.Key)
-                mainViewModel.getHourForecastAPI(it.Key)
+                getConditionAPI(it.Key)
+                getForecastAPI(it.Key)
+                getHourForecastAPI(it.Key)
                 fetchDataFromAPI = false
             }
         })
 
-        mainViewModel.condition.observe(this, {
+        condition.observe(this@MainActivity, {
             binding.condition = it
         })
 
-        mainViewModel.hourForecast.observe(this, {
+        hourForecast.observe(this@MainActivity, {
             hourForecastAdapter.submitList(it.toMutableList())
         })
 
-        mainViewModel.dailyForecast.observe(this, {
+        dailyForecast.observe(this@MainActivity, {
             dailyForecastAdapter.submitList(it.toMutableList())
             showProgressDialog(false)
         })
 
-        mainViewModel.requestFail.observe(this, {
+        requestFail.observe(this@MainActivity, {
             showProgressDialog(false)
             showSnackBar(binding.frameMain, it)
         })
 
-        mainViewModel.bitmapComposer.observe(this, {
+        bitmapComposer.observe(this@MainActivity, {
             binding.imvAppBg.foreground =
-                ColorDrawable(ContextCompat.getColor(this, R.color.black_40))
+                ColorDrawable(ContextCompat.getColor(this@MainActivity, R.color.black_40))
             it.into(binding.imvAppBg)
             showProgressDialog(false)
         })
     }
 
-    private fun setDetailsViews() {
-        binding.apply {
-            feelsLike.imgIcon.setImageResource(R.drawable.ic_thermometer)
-            feelsLike.tvTitle.text = getString(R.string.lbl_feels_like)
+    private fun setDetailsViews() = binding.apply {
+        feelsLike.imgIcon.setImageResource(R.drawable.ic_thermometer)
+        feelsLike.tvTitle.text = getString(R.string.lbl_feels_like)
 
-            wind.imgIcon.setImageResource(R.drawable.ic_wind)
-            wind.tvTitle.text = getString(R.string.lbl_wind)
+        wind.imgIcon.setImageResource(R.drawable.ic_wind)
+        wind.tvTitle.text = getString(R.string.lbl_wind)
 
-            humidity.imgIcon.setImageResource(R.drawable.ic_humidity)
-            humidity.tvTitle.text = getString(R.string.lbl_humidity)
+        humidity.imgIcon.setImageResource(R.drawable.ic_humidity)
+        humidity.tvTitle.text = getString(R.string.lbl_humidity)
 
-            pressure.imgIcon.setImageResource(R.drawable.ic_pressure)
-            pressure.tvTitle.text = getString(R.string.lbl_pressure)
+        pressure.imgIcon.setImageResource(R.drawable.ic_pressure)
+        pressure.tvTitle.text = getString(R.string.lbl_pressure)
 
-            visibility.imgIcon.setImageResource(R.drawable.ic_eye)
-            visibility.tvTitle.text = getString(R.string.lbl_visibility)
+        visibility.imgIcon.setImageResource(R.drawable.ic_eye)
+        visibility.tvTitle.text = getString(R.string.lbl_visibility)
 
-            dewPoint.imgIcon.setImageResource(R.drawable.ic_dew_point)
-            dewPoint.tvTitle.text = getString(R.string.dew_point)
-        }
+        dewPoint.imgIcon.setImageResource(R.drawable.ic_dew_point)
+        dewPoint.tvTitle.text = getString(R.string.dew_point)
     }
 
     private fun showProgressDialog(isShow: Boolean) {

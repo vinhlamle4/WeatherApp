@@ -1,4 +1,4 @@
-package com.example.weatherapp.screen.main.viewmodel
+package com.example.weatherapp.screen.main.view
 
 import android.app.Application
 import android.graphics.BitmapFactory
@@ -11,6 +11,7 @@ import com.example.weatherapp.model.condition.Condition
 import com.example.weatherapp.model.daily_forecast.DailyForecasts
 import com.example.weatherapp.model.hour_forecast.HourForecast
 import com.example.weatherapp.model.location.Location
+import com.example.weatherapp.repo.IWeatherRepository
 import com.example.weatherapp.repo.WeatherRepository
 import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,7 @@ import kotlin.random.Random
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val weatherRepository: WeatherRepository = WeatherRepository(application)
+    private val weatherRepository: IWeatherRepository = WeatherRepository(application)
 
     private val _requestFail = MutableLiveData<String>()
     val requestFail: LiveData<String> get() = _requestFail

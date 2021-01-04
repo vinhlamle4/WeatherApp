@@ -6,6 +6,7 @@ import com.example.weatherapp.model.hour_forecast.HourForecast
 import com.example.weatherapp.model.location.Location
 
 interface IWeatherRepository {
+    //region R
     suspend fun getLocationLocal(): Location
     suspend fun getConditionLocal(): Condition
     suspend fun getHourForecastLocal(): List<HourForecast>
@@ -18,7 +19,9 @@ interface IWeatherRepository {
 
     suspend fun deleteAllHourForecast()
     suspend fun deleteAllDailyForecast()
+    //endregion
 
+    //region Retrofit
     suspend fun fetchLocation(
         location: String,
         onSuccess: (location: Location) -> Unit,
@@ -42,4 +45,5 @@ interface IWeatherRepository {
         onSuccess: (dailyForecasts: ArrayList<DailyForecasts>) -> Unit,
         onFailed: (message: String) -> Unit
     )
+    //endregion
 }
