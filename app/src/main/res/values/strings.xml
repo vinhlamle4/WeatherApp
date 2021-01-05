@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">WeatherApp</string>
     <string name="lbl_city_name">City Name</string>
     <string name="lbl_search">Search</string>
 
