@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 
 val roomModule = module {
     single {
-        WeatherDatabase.getDatabase(androidContext())
+        WeatherDatabase.create(androidContext())
     }
 }
 

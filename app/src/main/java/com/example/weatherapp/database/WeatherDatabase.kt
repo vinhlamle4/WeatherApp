@@ -36,5 +36,13 @@ abstract class WeatherDatabase : RoomDatabase() {
                 return instance
             }
         }
+
+        fun create(context: Context) : WeatherDatabase {
+            return Room.databaseBuilder(
+                context.applicationContext,
+                WeatherDatabase::class.java,
+                DB_NAME
+            ).build()
+        }
     }
 }
