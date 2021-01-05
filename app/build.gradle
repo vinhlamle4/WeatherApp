@@ -39,6 +39,7 @@ android {
 
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
 
     kotlinOptions {
@@ -82,6 +83,7 @@ dependencies {
     kapt "android.arch.persistence.room:compiler:1.1.1"
     kapt "androidx.room:room-compiler:2.2.6"
 
+    //Debug Room (See Room DB online)
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.4'
 
     //blur image

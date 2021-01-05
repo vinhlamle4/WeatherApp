@@ -1,4 +1,4 @@
-package com.example.weatherapp.screen.main.view
+package com.example.weatherapp.ui.main.view
 
 import android.app.Application
 import android.graphics.BitmapFactory
@@ -12,7 +12,6 @@ import com.example.weatherapp.model.daily_forecast.DailyForecasts
 import com.example.weatherapp.model.hour_forecast.HourForecast
 import com.example.weatherapp.model.location.Location
 import com.example.weatherapp.repository.IWeatherRepository
-import com.example.weatherapp.repository.WeatherRepository
 import jp.wasabeef.blurry.Blurry
 import kotlinx.coroutines.*
 import kotlin.random.Random

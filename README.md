@@ -20,6 +20,7 @@ Other components:
 - [BlurImage](https://github.com/wasabeef/Blurry)
 - [KenBurnsView](https://github.com/flavioarfaria/KenBurnsView)
 - [LeakCanary](https://square.github.io/leakcanary/getting_started/)
+- [DebugDB](https://github.com/amitshekhariitbhu/Android-Debug-Database)
 
 ##3, Pattern
 - [MVVM](https://github.com/android/storage-samples/tree/master/MediaStore)

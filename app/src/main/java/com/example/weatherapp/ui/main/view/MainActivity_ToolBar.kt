@@ -1,4 +1,4 @@
-package com.example.weatherapp.screen.main.view
+package com.example.weatherapp.ui.main.view
 
 import android.animation.LayoutTransition
 import android.app.SearchManager
@@ -10,12 +10,18 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.SearchView
 import com.example.weatherapp.R
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 internal fun MainActivity.setUpToolbar() {
     setSupportActionBar(binding.toolBar)
     supportActionBar?.setDisplayShowTitleEnabled(false)
 }
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 internal fun MainActivity.handleToolBarMenu(menu: Menu) {
     menuInflater.inflate(R.menu.tool_bar_menu, menu)
     searchView = (menu.findItem(R.id.menu_search)?.actionView as SearchView)
@@ -56,6 +62,8 @@ internal fun MainActivity.handleToolBarMenu(menu: Menu) {
     searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
 }
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 private fun MainActivity.onTextSubmit(text: String) {
     fetchDataFromAPI = true
     binding.includeProgress.frameProgress.visibility = View.VISIBLE

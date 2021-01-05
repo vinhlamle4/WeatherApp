@@ -4,7 +4,7 @@ import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.database.WeatherDatabase
 import com.example.weatherapp.repository.IWeatherRepository
 import com.example.weatherapp.repository.WeatherRepository
-import com.example.weatherapp.screen.main.view.MainViewModel
+import com.example.weatherapp.ui.main.view.MainViewModel
 import com.example.weatherapp.service.WeatherService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

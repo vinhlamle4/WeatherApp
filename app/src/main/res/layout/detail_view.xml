@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="condition"
+            type="com.example.weatherapp.model.condition.Condition" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <!--region Details -->
+        <com.example.weatherapp.custom_view.TitleView
+            android:id="@+id/details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:label="@string/lbl_details"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_large"
+        app:layout_constraintTop_toBottomOf="@id/details">
+
+        <com.example.weatherapp.custom_view.WeatherView
+            android:id="@+id/feels_like"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_normal"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/wind"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:icon="@drawable/ic_thermometer"
+            app:title="@string/lbl_feels_like"
+            app:value="@{condition.realFeelTemperature.metric.stringValue}"
+            tools:value="35°C" />
+
+        <com.example.weatherapp.custom_view.WeatherView
+            android:id="@+id/wind"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_normal"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/humidity"
+            app:layout_constraintStart_toEndOf="@id/feels_like"
+            app:layout_constraintTop_toTopOf="parent"
+            app:icon="@drawable/ic_wind"
+            app:title="@string/lbl_wind"
+            app:value="@{condition.wind.speed.metric.stringValue}"
+            tools:value="50km/h" />
+
+        <com.example.weatherapp.custom_view.WeatherView
+            android:id="@+id/humidity"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginEnd="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_normal"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/wind"
+            app:layout_constraintTop_toTopOf="parent"
+            app:icon="@drawable/ic_humidity"
+            app:title="@string/lbl_humidity"
+            app:value="@{condition.humidity}"
+            tools:value="58%" />
+
+        <com.example.weatherapp.custom_view.WeatherView
+            android:id="@+id/pressure"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_marginEnd="@dimen/margin_normal"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/visibility"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/feels_like"
+            app:icon="@drawable/ic_pressure"
+            app:title="@string/lbl_pressure"
+            app:value="@{condition.pressure.metric.stringValue}"
+            tools:value="1000mb" />
+
+        <com.example.weatherapp.custom_view.WeatherView
+            android:id="@+id/visibility"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_marginEnd="@dimen/margin_normal"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toStartOf="@id/dew_point"
+            app:layout_constraintStart_toEndOf="@id/pressure"
+            app:layout_constraintTop_toBottomOf="@+id/wind"
+            app:icon="@drawable/ic_eye"
+            app:title="@string/lbl_visibility"
+            app:value="@{condition.visibility.metric.stringValue}"
+            tools:value="16.1km" />
+
+        <com.example.weatherapp.custom_view.WeatherView
+            android:id="@+id/dew_point"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_marginEnd="@dimen/margin_normal"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/visibility"
+            app:layout_constraintTop_toBottomOf="@+id/humidity"
+            app:icon="@drawable/ic_dew_point"
+            app:title="@string/dew_point"
+            app:value="@{condition.dewPoint.metric.stringValue}"
+            tools:value="30°C" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!--endregion-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

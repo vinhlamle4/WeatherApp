@@ -1,4 +1,4 @@
-package com.example.weatherapp.screen.main.view
+package com.example.weatherapp.ui.main.view
 
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -12,8 +12,8 @@ import com.amitshekhar.DebugDB
 import com.example.weatherapp.R
 import com.example.weatherapp.base.BaseActivity
 import com.example.weatherapp.databinding.ActivityMainBinding
-import com.example.weatherapp.screen.main.adapter.DailyForecastAdapter
-import com.example.weatherapp.screen.main.adapter.HourForecastAdapter
+import com.example.weatherapp.ui.main.adapter.DailyForecastAdapter
+import com.example.weatherapp.ui.main.adapter.HourForecastAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -42,7 +42,6 @@ class MainActivity : BaseActivity() {
         setUpToolbar()
         setAppBackground()
         initApp()
-        setDetailsViews()
         DebugDB.getAddressLog()
     }
 
@@ -130,26 +129,6 @@ class MainActivity : BaseActivity() {
             it.into(binding.imvAppBg)
             showProgressDialog(false)
         })
-    }
-
-    private fun setDetailsViews() = binding.apply {
-        feelsLike.imgIcon.setImageResource(R.drawable.ic_thermometer)
-        feelsLike.tvTitle.text = getString(R.string.lbl_feels_like)
-
-        wind.imgIcon.setImageResource(R.drawable.ic_wind)
-        wind.tvTitle.text = getString(R.string.lbl_wind)
-
-        humidity.imgIcon.setImageResource(R.drawable.ic_humidity)
-        humidity.tvTitle.text = getString(R.string.lbl_humidity)
-
-        pressure.imgIcon.setImageResource(R.drawable.ic_pressure)
-        pressure.tvTitle.text = getString(R.string.lbl_pressure)
-
-        visibility.imgIcon.setImageResource(R.drawable.ic_eye)
-        visibility.tvTitle.text = getString(R.string.lbl_visibility)
-
-        dewPoint.imgIcon.setImageResource(R.drawable.ic_dew_point)
-        dewPoint.tvTitle.text = getString(R.string.dew_point)
     }
 
     private fun showProgressDialog(isShow: Boolean) {
