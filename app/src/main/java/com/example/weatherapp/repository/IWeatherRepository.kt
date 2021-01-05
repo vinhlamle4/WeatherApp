@@ -1,4 +1,4 @@
-package com.example.weatherapp.repo
+package com.example.weatherapp.repository
 
 import com.example.weatherapp.model.condition.Condition
 import com.example.weatherapp.model.daily_forecast.DailyForecasts
@@ -6,7 +6,7 @@ import com.example.weatherapp.model.hour_forecast.HourForecast
 import com.example.weatherapp.model.location.Location
 
 interface IWeatherRepository {
-    //region R
+    //region Room
     suspend fun getLocationLocal(): Location
     suspend fun getConditionLocal(): Condition
     suspend fun getHourForecastLocal(): List<HourForecast>

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.widget.SearchView
-import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -15,13 +14,22 @@ import com.example.weatherapp.base.BaseActivity
 import com.example.weatherapp.databinding.ActivityMainBinding
 import com.example.weatherapp.screen.main.adapter.DailyForecastAdapter
 import com.example.weatherapp.screen.main.adapter.HourForecastAdapter
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class MainActivity : BaseActivity() {
 
-    private lateinit var dailyForecastAdapter: DailyForecastAdapter
-    private lateinit var hourForecastAdapter: HourForecastAdapter
+    private val dailyForecastAdapter by lazy {
+        DailyForecastAdapter()
+    }
+    private val hourForecastAdapter by lazy {
+        HourForecastAdapter()
+    }
 
-    internal val mainViewModel: MainViewModel by viewModels()
+    internal val mainViewModel: MainViewModel by viewModel()
     internal var fetchDataFromAPI = false
 
     internal lateinit var binding: ActivityMainBinding
@@ -57,18 +65,12 @@ class MainActivity : BaseActivity() {
     }
 
     private fun initApp() {
-        initAdapter()
-        initRoomDb()
+        getWeatherFromLocal()
         initRecycler()
-        initViewObserver()
+        initObserver()
     }
 
-    private fun initAdapter() {
-        dailyForecastAdapter = DailyForecastAdapter()
-        hourForecastAdapter = HourForecastAdapter()
-    }
-
-    private fun initRoomDb() {
+    private fun getWeatherFromLocal() {
         mainViewModel.getWeatherInformationFromLocal()
     }
 
@@ -92,7 +94,7 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun initViewObserver() = mainViewModel.apply {
+    private fun initObserver() = mainViewModel.apply {
         location.observe(this@MainActivity, {
             binding.tvCityName.text = it.englishName
             //fetchDataFromAPI = true => search city from searchView fetch data and save to DB

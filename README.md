@@ -14,6 +14,7 @@ JetPack library:
 - [LifeCycle](https://developer.android.com/jetpack/androidx/releases/lifecycle)
 
 Other components:
+- [Koin](https://www.raywenderlich.com/9457-dependency-injection-with-koin)
 - [Coroutine](https://developer.android.com/topic/libraries/architecture/coroutines)
 - [Retrofit2](https://square.github.io/retrofit/)
 - [BlurImage](https://github.com/wasabeef/Blurry)

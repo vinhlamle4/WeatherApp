@@ -11,19 +11,22 @@ import com.example.weatherapp.model.condition.Condition
 import com.example.weatherapp.model.daily_forecast.DailyForecasts
 import com.example.weatherapp.model.hour_forecast.HourForecast
 import com.example.weatherapp.model.location.Location
-import com.example.weatherapp.repo.IWeatherRepository
-import com.example.weatherapp.repo.WeatherRepository
+import com.example.weatherapp.repository.IWeatherRepository
+import com.example.weatherapp.repository.WeatherRepository
 import jp.wasabeef.blurry.Blurry
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import kotlin.random.Random
 
 //https://codelabs.developers.google.com/codelabs/android-room-with-a-view-kotlin/#9
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+@FlowPreview
+@ExperimentalCoroutinesApi
+class MainViewModel(
+    application: Application,
+    private val weatherRepository: IWeatherRepository
+) : AndroidViewModel(application) {
 
-    private val weatherRepository: IWeatherRepository = WeatherRepository(application)
+//    private val weatherRepository: IWeatherRepository = WeatherRepository(application)
 
     private val _requestFail = MutableLiveData<String>()
     val requestFail: LiveData<String> get() = _requestFail
