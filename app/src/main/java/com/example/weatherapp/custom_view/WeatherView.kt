@@ -4,16 +4,15 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.example.weatherapp.R
 
 class WeatherView : RelativeLayout {
-    lateinit var imgIcon: ImageView
-    lateinit var tvTitle: TextView
-    lateinit var tvValue: TextView
+    private lateinit var imgIcon: ImageView
+    private lateinit var tvTitle: TextView
+    private lateinit var tvValue: TextView
 
     constructor(context: Context) : super(context)
 
@@ -37,7 +36,7 @@ class WeatherView : RelativeLayout {
     }
 
     fun setValue(text: String?) {
-        if(text!= null) {
+        if (text != null) {
             tvValue.text = text
         }
     }

@@ -8,8 +8,9 @@ import android.widget.TextView
 import com.example.weatherapp.R
 import com.example.weatherapp.databinding.TitleViewBinding
 
-class TitleView: LinearLayout {
+class TitleView : LinearLayout {
     private lateinit var tvTitle: TextView
+
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {

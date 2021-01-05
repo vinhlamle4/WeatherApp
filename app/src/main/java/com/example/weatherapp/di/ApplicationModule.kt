@@ -32,6 +32,10 @@ val repositoryModule = module {
 
 val retrofitModule = module {
     single {
+        BuildConfig.API_URL
+    }
+
+    single {
         HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
@@ -47,10 +51,14 @@ val retrofitModule = module {
         builder.build()
     }
 
+    single {
+        GsonConverterFactory.create()
+    }
+
     single<Retrofit> {
         Retrofit.Builder()
-            .baseUrl(BuildConfig.API_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(get<String>())
+            .addConverterFactory(get())
             .client(get())
             .build()
     }
