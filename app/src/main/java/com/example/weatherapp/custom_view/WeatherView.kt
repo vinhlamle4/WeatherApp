@@ -8,19 +8,16 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.example.weatherapp.R
+import com.example.weatherapp.databinding.WeatherViewBinding
 
 class WeatherView : RelativeLayout {
-    private lateinit var imgIcon: ImageView
-    private lateinit var tvTitle: TextView
-    private lateinit var tvValue: TextView
+
+    private lateinit var binding: WeatherViewBinding
 
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        val view = LayoutInflater.from(context).inflate(R.layout.weather_view, this, true)
-        imgIcon = view.findViewById(R.id.img_icon)
-        tvTitle = view.findViewById(R.id.tv_title)
-        tvValue = view.findViewById(R.id.tv_value)
+        binding = WeatherViewBinding.inflate(LayoutInflater.from(context), this)
 
         val arr = context.obtainStyledAttributes(attrs, R.styleable.WeatherView)
         setAttr(arr)
@@ -29,15 +26,15 @@ class WeatherView : RelativeLayout {
 
     private fun setAttr(arr: TypedArray) {
         val title = arr.getString(R.styleable.WeatherView_title)
-        tvTitle.text = title
+        binding.tvTitle.text = title
 
         val icon = arr.getResourceId(R.styleable.WeatherView_icon, -1)
-        imgIcon.setImageResource(icon)
+        binding.imgIcon.setImageResource(icon)
     }
 
     fun setValue(text: String?) {
         if (text != null) {
-            tvValue.text = text
+            binding.tvValue.text = text
         }
     }
 }

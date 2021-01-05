@@ -9,13 +9,11 @@ import com.example.weatherapp.R
 import com.example.weatherapp.databinding.TitleViewBinding
 
 class TitleView : LinearLayout {
-    private lateinit var tvTitle: TextView
-
+    private lateinit var binding: TitleViewBinding
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        val binding = TitleViewBinding.inflate(LayoutInflater.from(context), this)
-        tvTitle = binding.tvTitle
+        binding = TitleViewBinding.inflate(LayoutInflater.from(context), this)
 
         val arr = context.obtainStyledAttributes(attrs, R.styleable.TitleView)
         val label = arr.getString(R.styleable.TitleView_label)
@@ -24,6 +22,6 @@ class TitleView : LinearLayout {
     }
 
     private fun setText(text: String?) {
-        tvTitle.text = text
+        binding.tvTitle.text = text
     }
 }
