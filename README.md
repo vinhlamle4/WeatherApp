@@ -2,8 +2,8 @@
 
 ## 1, Overview
 - this project using AccuWeather API to fetch weather data and showing to UI with dataBinding and LiveData
--[app image](https://pixabay.com/)
--[api document](https://developer.accuweather.com/apis)
+- [AppImage](https://pixabay.com/)
+- [ApiDocument](https://developer.accuweather.com/apis)
 
 ## 2, Libraries
 JetPack library:
@@ -21,8 +21,8 @@ Other components:
 - [LeakCanary](https://square.github.io/leakcanary/getting_started/)
 
 ##3, Pattern
--[MVVM]
--[Repository]
+- [MVVM](https://github.com/android/storage-samples/tree/master/MediaStore)
+- [Repository](https://www.raywenderlich.com/6430697-view-binding-tutorial-for-android-getting-started)
 
 Example:
 locationKey : 4-353981_1_AL
