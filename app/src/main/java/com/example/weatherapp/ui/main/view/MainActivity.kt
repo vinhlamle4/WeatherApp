@@ -8,7 +8,6 @@ import android.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.amitshekhar.DebugDB
 import com.example.weatherapp.R
 import com.example.weatherapp.base.BaseActivity
 import com.example.weatherapp.databinding.ActivityMainBinding
@@ -42,7 +41,6 @@ class MainActivity : BaseActivity() {
         setUpToolbar()
         setAppBackground()
         initApp()
-        DebugDB.getAddressLog()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

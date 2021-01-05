@@ -1,6 +1,8 @@
 package com.example.weatherapp.application
 
 import android.app.Application
+import com.amitshekhar.DebugDB
+import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.di.roomModule
 import com.example.weatherapp.di.viewModelModule
 import com.example.weatherapp.di.repositoryModule
@@ -17,6 +19,9 @@ class WeatherApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initKoIn()
+        if(BuildConfig.DEBUG) {
+            DebugDB.getAddressLog()
+        }
     }
 
     private fun initKoIn() {
