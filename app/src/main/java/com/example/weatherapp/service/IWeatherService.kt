@@ -9,7 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface WeatherService {
+interface IWeatherService {
     @GET("locations/v1/cities/search")
     fun getLocation(
         @Query("apikey") apiKey: String,

@@ -11,7 +11,7 @@ import com.example.weatherapp.model.daily_forecast.DailyForecasts
 import com.example.weatherapp.model.daily_forecast.Forecast
 import com.example.weatherapp.model.hour_forecast.HourForecast
 import com.example.weatherapp.model.location.Location
-import com.example.weatherapp.service.WeatherService
+import com.example.weatherapp.service.IWeatherService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -24,7 +24,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class WeatherRepository(
     val context: Application,
-    private val weatherApi: WeatherService,
+    private val IWeatherApi: IWeatherService,
     private val weatherDb: WeatherDatabase
 ) : IWeatherRepository {
 
@@ -88,7 +88,7 @@ class WeatherRepository(
         onSuccess: (location: Location) -> Unit,
         onFailed: (message: String) -> Unit
     ) = withContext(Dispatchers.IO) {
-        val call = weatherApi.getLocation(BuildConfig.API_KEY, location)
+        val call = IWeatherApi.getLocation(BuildConfig.API_KEY, location)
         val response = enqueueAPI(call)
         try {
             @Suppress("UNCHECKED_CAST")
@@ -110,7 +110,7 @@ class WeatherRepository(
         onSuccess: (condition: Condition) -> Unit,
         onFailed: (message: String) -> Unit
     ) = withContext(Dispatchers.IO) {
-        val call = weatherApi.getCondition(locationKey, BuildConfig.API_KEY, details = true)
+        val call = IWeatherApi.getCondition(locationKey, BuildConfig.API_KEY, details = true)
         val response = enqueueAPI(call)
 
         try {
@@ -134,7 +134,7 @@ class WeatherRepository(
         onSuccess: (hourForecasts: ArrayList<HourForecast>) -> Unit,
         onFailed: (message: String) -> Unit
     ) = withContext(Dispatchers.IO) {
-        val call = weatherApi.getHourForecast(locationKey, BuildConfig.API_KEY, metric = true)
+        val call = IWeatherApi.getHourForecast(locationKey, BuildConfig.API_KEY, metric = true)
         val response = enqueueAPI(call)
 
         try {
@@ -161,7 +161,7 @@ class WeatherRepository(
         onSuccess: (dailyForecasts: ArrayList<DailyForecasts>) -> Unit,
         onFailed: (message: String) -> Unit
     ) = withContext(Dispatchers.IO) {
-        val call = weatherApi.getForecast(locationKey, BuildConfig.API_KEY, metric = true)
+        val call = IWeatherApi.getForecast(locationKey, BuildConfig.API_KEY, metric = true)
         val response = enqueueAPI(call)
         try {
             @Suppress("UNCHECKED_CAST")

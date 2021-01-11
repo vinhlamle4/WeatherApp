@@ -25,8 +25,6 @@ class MainViewModel(
     private val weatherRepository: IWeatherRepository
 ) : AndroidViewModel(application) {
 
-//    private val weatherRepository: IWeatherRepository = WeatherRepository(application)
-
     private val _requestFail = MutableLiveData<String>()
     val requestFail: LiveData<String> get() = _requestFail
 
@@ -45,7 +43,7 @@ class MainViewModel(
     private val _bitmapComposer = MutableLiveData<Blurry.BitmapComposer>()
     val bitmapComposer: LiveData<Blurry.BitmapComposer> get() = _bitmapComposer
 
-    private var appContext: Application = getApplication<Application>()
+    private val appContext: Application = getApplication<Application>()
 
     fun getLocationAPI(location: String) {
         viewModelScope.launch {
@@ -60,31 +58,34 @@ class MainViewModel(
 
     fun getConditionAPI(locationKey: String) {
         viewModelScope.launch {
-            weatherRepository.fetchCondition(locationKey, onSuccess = {
-                _condition.postValue(it)
-            }, onFailed = {
-                _requestFail.postValue(it)
-            })
+            weatherRepository.fetchCondition(locationKey,
+                onSuccess = {
+                    _condition.postValue(it)
+                }, onFailed = {
+                    _requestFail.postValue(it)
+                })
         }
     }
 
     fun getHourForecastAPI(locationKey: String) {
         viewModelScope.launch {
-            weatherRepository.fetchHourForecast(locationKey, onSuccess = {
-                _hourForecast.postValue(it)
-            }, onFailed = {
-                _requestFail.postValue(it)
-            })
+            weatherRepository.fetchHourForecast(locationKey,
+                onSuccess = {
+                    _hourForecast.postValue(it)
+                }, onFailed = {
+                    _requestFail.postValue(it)
+                })
         }
     }
 
     fun getForecastAPI(locationKey: String) {
         viewModelScope.launch {
-            weatherRepository.fetchDailyForecast(locationKey, onSuccess = {
-                _dailyForecast.postValue(it)
-            }, onFailed = {
-                _requestFail.postValue(it)
-            })
+            weatherRepository.fetchDailyForecast(locationKey,
+                onSuccess = {
+                    _dailyForecast.postValue(it)
+                }, onFailed = {
+                    _requestFail.postValue(it)
+                })
         }
     }
 
@@ -108,7 +109,12 @@ class MainViewModel(
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 val appBgs =
-                    arrayOf(R.mipmap.app_bg, R.mipmap.app_bg1, R.mipmap.app_bg2, R.mipmap.app_bg3)
+                    arrayOf(
+                        R.mipmap.app_bg,
+                        R.mipmap.app_bg1,
+                        R.mipmap.app_bg2,
+                        R.mipmap.app_bg3
+                    )
 
                 val random = Random.nextInt(appBgs.size)
 

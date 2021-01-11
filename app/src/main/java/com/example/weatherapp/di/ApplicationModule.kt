@@ -5,7 +5,7 @@ import com.example.weatherapp.database.WeatherDatabase
 import com.example.weatherapp.repository.IWeatherRepository
 import com.example.weatherapp.repository.WeatherRepository
 import com.example.weatherapp.ui.main.view.MainViewModel
-import com.example.weatherapp.service.WeatherService
+import com.example.weatherapp.service.IWeatherService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import okhttp3.OkHttpClient
@@ -32,36 +32,56 @@ val repositoryModule = module {
 
 val retrofitModule = module {
 
-    single {
-        HttpLoggingInterceptor().apply {
+    fun initInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
     }
 
-    single {
+    fun initClient(interceptor: HttpLoggingInterceptor): OkHttpClient {
         val builder = OkHttpClient.Builder()
             .readTimeout(30, TimeUnit.SECONDS)
 
         if (BuildConfig.DEBUG) {
-            builder.addInterceptor(get<HttpLoggingInterceptor>())
+            builder.addInterceptor(interceptor)
         }
-        builder.build()
+        return builder.build()
     }
 
-    single {
-        GsonConverterFactory.create()
+    fun initGSonConverter(): GsonConverterFactory {
+        return GsonConverterFactory.create()
     }
 
-    single<Retrofit> {
-        Retrofit.Builder()
+    fun initRetrofit(gSonConvert: GsonConverterFactory, client: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
             .baseUrl(BuildConfig.API_URL)
-            .addConverterFactory(get<GsonConverterFactory>())
-            .client(get())
+            .addConverterFactory(gSonConvert)
+            .client(client)
             .build()
     }
 
-    single<WeatherService> {
-        get<Retrofit>().create(WeatherService::class.java)
+    fun createService(retrofit: Retrofit): IWeatherService {
+        return retrofit.create(IWeatherService::class.java)
+    }
+
+    single {
+        initInterceptor()
+    }
+
+    single {
+        initClient(get())
+    }
+
+    single {
+        initGSonConverter()
+    }
+
+    single {
+        initRetrofit(get(), get())
+    }
+
+    single {
+        createService(get())
     }
 }
 

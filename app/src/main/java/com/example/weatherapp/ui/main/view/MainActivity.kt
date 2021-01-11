@@ -81,13 +81,15 @@ class MainActivity : BaseActivity() {
             )!!
         )
 
-        binding.recyclerDailyForecast.apply {
-            addItemDecoration(dividerVertical)
-            adapter = dailyForecastAdapter
-        }
+        binding.apply {
+            recyclerDailyForecast.run {
+                addItemDecoration(dividerVertical)
+                adapter = dailyForecastAdapter
+            }
 
-        binding.recyclerHourForecast.apply {
-            adapter = hourForecastAdapter
+            recyclerHourForecast.run {
+                adapter = hourForecastAdapter
+            }
         }
     }
 
@@ -129,11 +131,11 @@ class MainActivity : BaseActivity() {
         })
     }
 
-    private fun showProgressDialog(isShow: Boolean) {
+    private fun showProgressDialog(isShow: Boolean) = binding.includeProgress.frameProgress.apply {
         if (isShow) {
-            binding.includeProgress.frameProgress.visibility = View.VISIBLE
-            return
+            visibility = View.VISIBLE
+            return@apply
         }
-        binding.includeProgress.frameProgress.visibility = View.GONE
+        visibility = View.GONE
     }
 }
