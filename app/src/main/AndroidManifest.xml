@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".ui.splash_screen.SplashActivity"
+        <activity
+            android:name=".ui.splash_screen.SplashActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.view.MainActivity"/>
+        <activity
+            android:name=".ui.main.view.MainActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".base.BaseActivity" />
     </application>
 
